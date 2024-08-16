@@ -3,6 +3,7 @@ import cors from 'cors'
 import morgan from 'morgan'
 import ProductRoute from '../routes/products.routes.js'
 import CartRoute from '../routes/carts.routes.js'
+import connectDB from '../config/'
 
 export default class Server {
     constructor () {
