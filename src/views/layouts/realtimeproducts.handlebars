@@ -1,0 +1,51 @@
+<!-- realTimeProducts.handlebars -->
+<h1>Productos en Tiempo Real</h1>
+
+<!-- Formulario para agregar un nuevo producto -->
+<form id="product-form">
+    <input type="text" name="name" placeholder="Nombre del producto" required>
+    <input type="number" name="price" placeholder="Precio" required>
+    <input type="text" name="category" placeholder="Categoría" required>
+    <button type="submit">Agregar Producto</button>
+</form>
+
+<!-- Lista de productos -->
+<div id="products-list"></div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io();
+    const productForm = document.getElementById('product-form');
+
+    // Manejar el envío del formulario
+    productForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        
+        const formData = new FormData(productForm);
+        const data = {};
+        formData.forEach((value, key) => {
+            data[key] = value;
+        });
+
+        try {
+            await fetch('/api/product', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+            productForm.reset(); // Vaciar el formulario después de enviar
+        } catch (error) {
+            console.error('Error al agregar el producto:', error);
+        }
+    });
+
+    // Actualizar la lista de productos en tiempo real
+    socket.on('productAdded', (product) => {
+        const productsList = document.getElementById('products-list');
+        const productItem = document.createElement('div');
+        productItem.textContent = `ID: ${product.id}, Nombre: ${product.name}, Precio: ${product.price}, Categoría: ${product.category}`;
+        productsList.appendChild(productItem);
+    });
+</script>
