@@ -40,17 +40,7 @@ async function GetProduct(req, res) {
     }
 }
 
-async function PutProduct(req, res) {
-    // Lógica para actualizar producto
-}
-
-async function DeleteProduct(req, res) {
-    // Lógica para eliminar producto
-}
-
 export {
     PostProduct,
-    GetProduct,
-    PutProduct,
-    DeleteProduct
+    GetProduct
 };
