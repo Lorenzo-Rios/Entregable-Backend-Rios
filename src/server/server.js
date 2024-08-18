@@ -5,7 +5,7 @@ import morgan from 'morgan'
 import { Server as socketIo } from 'socket.io'
 
 /* Routes */
-import ProductRoute from '../routes/Client/Products/Products.routes.js'
+import ProductRoute from '../routes/Client/Products/Products.router.js'
 import CartRoute from '../routes/Client/Carts/Carts.routes.js'
 import { engine } from 'express-handlebars'
 import http from 'http';
