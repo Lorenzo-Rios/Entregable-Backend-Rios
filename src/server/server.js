@@ -5,8 +5,9 @@ import morgan from 'morgan'
 import { Server as socketIo } from 'socket.io'
 
 /* Routes */
-import ProductRoute from '../routes/Client/Products/Products.router.js'
+import ProductRoute from '../routes/Client/Products/Products.routes.js'
 import CartRoute from '../routes/Client/Carts/Carts.routes.js'
+import ViewRoute from '../routes/Client/Views/Views.routes.js'
 import { engine } from 'express-handlebars'
 import http from 'http';
 
@@ -18,9 +19,11 @@ export default class Server {
         this.port = process.env.SERVER_PORT || '8080';
         this.apiPaht = {
             product: '/api/product',
-            cart: '/api/cart'
+            cart: '/api/cart',
+            view: ''
         }
 
+        this.app.set('io', this.io);
         this.middlewares();
         this.viewEngine();
         this.router();
@@ -31,11 +34,9 @@ export default class Server {
         this.app.use(cors({
             origin: '*'
         }));
-
         this.app.use(morgan('combined'));
-
-        this.app.use(express.json({ limit: '50mb' }));
-        
+        this.app.use(express.json({ limit: '50mb' }));     
+        this.app.use(express.urlencoded({ extended: true }));
     }
 
     viewEngine() {
@@ -55,6 +56,7 @@ export default class Server {
     }
 
     router() {
+        this.app.use('/', ViewRoute);
         this.app.use(this.apiPaht.product, ProductRoute);
         this.app.use(this.apiPaht.cart, CartRoute);
     }

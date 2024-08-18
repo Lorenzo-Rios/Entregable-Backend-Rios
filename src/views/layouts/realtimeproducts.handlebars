@@ -15,12 +15,11 @@
 <script src="/socket.io/socket.io.js"></script>
 <script>
     const socket = io();
-    const productForm = document.getElementById('product-form');
+    console.log('Socket.IO conectado');
+    const productForm = document.querySelector('#product-form');  
 
-    // Manejar el envío del formulario
     productForm.addEventListener('submit', async (event) => {
         event.preventDefault();
-        
         const formData = new FormData(productForm);
         const data = {};
         formData.forEach((value, key) => {
@@ -41,9 +40,13 @@
         }
     });
 
+    socket.on('connect', () => {
+        console.log('Usuario conectado al servidor')
+    })
+
     // Actualizar la lista de productos en tiempo real
     socket.on('productAdded', (product) => {
-        const productsList = document.getElementById('products-list');
+        const productsList = document.querySelector('#products-list');  // Usando querySelector
         const productItem = document.createElement('div');
         productItem.textContent = `ID: ${product.id}, Nombre: ${product.name}, Precio: ${product.price}, Categoría: ${product.category}`;
         productsList.appendChild(productItem);
