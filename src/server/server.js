@@ -5,8 +5,8 @@ import morgan from 'morgan'
 import socketIo from 'socket.io';
 
 /* Routes */
-import ProductRoute from '../routes/products.routes.js'
-import CartRoute from '../routes/carts.routes.js'
+import ProductRoute from '../routes/Client/Products/Products.routes.js'
+import CartRoute from '../routes/Client/Carts/Carts.routes.js'
 import connectDB from '../models/users.model.js'
 import { engine } from 'express-handlebars'
 import http from 'http';
@@ -44,7 +44,7 @@ export default class Server {
         // Configurar Handlebars como motor de plantillas
         this.app.engine('handlebars', engine());
         this.app.set('view engine', 'handlebars');
-        this.app.set('views', '.src/views/layouts'); 
+        this.app.set('views', './src/views/layouts'); 
     }
 
     initializeSocketIo() {

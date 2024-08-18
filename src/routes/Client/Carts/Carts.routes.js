@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { PostCart, GetCart, AddProductToCart} from "../../../controllers/Cart/Cart.controller"
+import { PostCart, GetCart, AddProductToCart} from "../../../controllers/Client/Cart/Cart.controller"
 
 const router = Router()
 
