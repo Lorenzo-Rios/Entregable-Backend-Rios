@@ -17,5 +17,3 @@ const userSchema = new mongoose.Schema({
         required: true
     }
 });
-
-exports.
