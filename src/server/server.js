@@ -7,7 +7,6 @@ import socketIo from 'socket.io';
 /* Routes */
 import ProductRoute from '../routes/Client/Products/Products.routes.js'
 import CartRoute from '../routes/Client/Carts/Carts.routes.js'
-import connectDB from '../models/users.model.js'
 import { engine } from 'express-handlebars'
 import http from 'http';
 
@@ -23,7 +22,6 @@ export default class Server {
         }
 
         this.middlewares();
-        this.connectDB();
         this.viewEngine();
         this.router();
         this.initializeSocketIo();
