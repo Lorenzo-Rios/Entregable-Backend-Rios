@@ -2,7 +2,7 @@
 import express from 'express'
 import cors from 'cors'
 import morgan from 'morgan'
-import socketIo from 'socket.io';
+import { Server as socketIo } from 'socket.io'
 
 /* Routes */
 import ProductRoute from '../routes/Client/Products/Products.routes.js'
@@ -14,7 +14,7 @@ export default class Server {
     constructor () {
         this.app = express();
         this.server = http.createServer(this.app);
-        this.io = socketIo(this.server);
+        this.io = new socketIo(this.server);
         this.port = process.env.SERVER_PORT || '8080';
         this.apiPaht = {
             product: '/api/product',
