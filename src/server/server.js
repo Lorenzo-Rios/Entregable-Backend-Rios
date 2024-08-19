@@ -3,13 +3,17 @@ import express from 'express'
 import cors from 'cors'
 import morgan from 'morgan'
 import { Server as socketIo } from 'socket.io'
+import { engine } from 'express-handlebars'
+
+/* Access */
+import http from 'http';
+import path from 'path'
+import { __dirname } from '../utils/dirname.js';
 
 /* Routes */
 import ProductRoute from '../routes/Client/Products/Products.routes.js'
 import CartRoute from '../routes/Client/Carts/Carts.routes.js'
 import ViewRoute from '../routes/Client/Views/Views.routes.js'
-import { engine } from 'express-handlebars'
-import http from 'http';
 
 export default class Server {
     constructor () {
@@ -19,8 +23,7 @@ export default class Server {
         this.port = process.env.SERVER_PORT || '8080';
         this.apiPaht = {
             product: '/api/product',
-            cart: '/api/cart',
-            view: ''
+            cart: '/api/cart'
         }
 
         this.app.set('io', this.io);
@@ -37,13 +40,18 @@ export default class Server {
         this.app.use(morgan('combined'));
         this.app.use(express.json({ limit: '50mb' }));     
         this.app.use(express.urlencoded({ extended: true }));
+        this.app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
     }
 
     viewEngine() {
         // Configurar Handlebars como motor de plantillas
-        this.app.engine('handlebars', engine());
+        this.app.engine('handlebars', engine({
+            layoutsDir: path.join(__dirname, '../views/layouts'),
+            defaultLayout: 'main',
+            extname: '.handlebars'
+        }));
         this.app.set('view engine', 'handlebars');
-        this.app.set('views', './src/views/layouts'); 
+        this.app.set('views', path.join(__dirname, '../views/layouts')); // Asegúrate de que esta línea esté configurada correctamente
     }
 
     initializeSocketIo() {
