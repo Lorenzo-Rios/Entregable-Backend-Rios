@@ -41,17 +41,18 @@ export default class Server {
         this.app.use(express.json({ limit: '50mb' }));     
         this.app.use(express.urlencoded({ extended: true }));
         this.app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+        this.app.use((req, res, next) => {
+            req.io = this.io;
+            next();
+        })
     }
 
     viewEngine() {
-        // Configurar Handlebars como motor de plantillas
         this.app.engine('handlebars', engine({
-            layoutsDir: path.join(__dirname, '../views/layouts'),
-            defaultLayout: 'main',
-            extname: '.handlebars'
+            layoutsDir: path.join(__dirname, '../views/layouts')
         }));
         this.app.set('view engine', 'handlebars');
-        this.app.set('views', path.join(__dirname, '../views/layouts')); // Asegúrate de que esta línea esté configurada correctamente
+        this.app.set('views', path.join(__dirname, '../views/layouts'));
     }
 
     initializeSocketIo() {

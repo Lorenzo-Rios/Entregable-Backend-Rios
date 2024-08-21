@@ -1,9 +1,10 @@
 import { Router } from 'express'
-import { renderChat, renderHome, renderRealTimeProducts} from '../../../controllers/Client/View/View.controller.js'
+import { renderMain, renderHome, renderChat, renderRealTimeProducts} from '../../../controllers/Client/View/View.controller.js'
 
 const router = Router()
 
-router.get('/', renderHome)
+router.get('/', renderMain)
+router.get('/home', renderHome)
 router.get('/chat', renderChat)
 router.get('/realtimeproducts', renderRealTimeProducts)
 

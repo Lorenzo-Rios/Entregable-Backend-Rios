@@ -1,54 +1,60 @@
 <!-- realTimeProducts.handlebars -->
 <h1>Productos en Tiempo Real</h1>
 
-<!-- Formulario para agregar un nuevo producto -->
-<form id="product-form">
-    <input type="text" name="name" placeholder="Nombre del producto" required>
+<form id="productForm">
+    <input type="text" name="title" placeholder="Título" required>
     <input type="number" name="price" placeholder="Precio" required>
-    <input type="text" name="category" placeholder="Categoría" required>
+    <input type="text" name="description" placeholder="Descripción" required>
+    <input type="text" name="thumbnail" placeholder="URL de la imagen" required>
+    <input type="number" name="stock" placeholder="Stock" required>
     <button type="submit">Agregar Producto</button>
 </form>
 
-<!-- Lista de productos -->
-<div id="products-list"></div>
+<ul id="productsList">
+<!-- Productos -->
+</ul>
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
     const socket = io();
-    console.log('Socket.IO conectado');
-    const productForm = document.querySelector('#product-form');  
+    const form = document.getElementById('productForm');
+    const productList = document.getElementById('productsList');
 
-    productForm.addEventListener('submit', async (event) => {
+    form.addEventListener('submit', async (event) => {
         event.preventDefault();
-        const formData = new FormData(productForm);
-        const data = {};
-        formData.forEach((value, key) => {
-            data[key] = value;
-        });
+
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
 
         try {
-            await fetch('/api/product', {
+            const response = await fetch('/api/product', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(data)
             });
-            productForm.reset(); // Vaciar el formulario después de enviar
+
+            if (response.ok) {
+                // El servidor emite la lista completa de productos después de agregar uno nuevo
+                // No es necesario emitir el producto desde el cliente
+                form.reset(); // Limpiar el formulario
+            } else {
+                console.error('Error al agregar el producto');
+            }
         } catch (error) {
-            console.error('Error al agregar el producto:', error);
+            console.error('Error en la solicitud:', error);
         }
     });
 
-    socket.on('connect', () => {
-        console.log('Usuario conectado al servidor')
-    })
+    // Escuchar el evento de actualización de productos desde el servidor
+    socket.on('productList', (products) => {
+        productList.innerHTML = ''; // Limpiar la lista de productos
 
-    // Actualizar la lista de productos en tiempo real
-    socket.on('productAdded', (product) => {
-        const productsList = document.querySelector('#products-list');  // Usando querySelector
-        const productItem = document.createElement('div');
-        productItem.textContent = `ID: ${product.id}, Nombre: ${product.name}, Precio: ${product.price}, Categoría: ${product.category}`;
-        productsList.appendChild(productItem);
+        products.forEach((product) => {
+            const li = document.createElement('li');
+            li.textContent = `${product.title} - $${product.price}`;
+            productList.appendChild(li);
+        });
     });
 </script>
