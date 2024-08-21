@@ -20,12 +20,10 @@
         event.preventDefault();
         const message = messageInput.value;
         
-        // Enviar el mensaje al servidor
         socket.emit('chatMessage', message);
-        messageInput.value = ''; // Vaciar el campo de entrada
+        messageInput.value = '';
     });
 
-    // Recibir mensajes del servidor
     socket.on('chatMessage', (message) => {
         const messageItem = document.createElement('div');
         messageItem.textContent = message;

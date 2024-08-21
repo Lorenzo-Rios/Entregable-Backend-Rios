@@ -36,8 +36,6 @@
             });
 
             if (response.ok) {
-                // El servidor emite la lista completa de productos después de agregar uno nuevo
-                // No es necesario emitir el producto desde el cliente
                 form.reset(); // Limpiar el formulario
             } else {
                 console.error('Error al agregar el producto');
@@ -46,10 +44,9 @@
             console.error('Error en la solicitud:', error);
         }
     });
-
-    // Escuchar el evento de actualización de productos desde el servidor
+    
     socket.on('productList', (products) => {
-        productList.innerHTML = ''; // Limpiar la lista de productos
+        productList.innerHTML = '';
 
         products.forEach((product) => {
             const li = document.createElement('li');
