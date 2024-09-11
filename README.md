@@ -1,3 +1,3 @@
 # Mongo Crud
 
-mongodb+srv://Lorenzo:<password>@app-eccomerce.hnbuh.mongodb.net/?retryWrites=true&w=majority&appName=App-Eccomerce
+mongodb+srv://Lorenzo:lorenzorios123.@app-eccomerce.hnbuh.mongodb.net/?retryWrites=true&w=majority&appName=App-Eccomerce

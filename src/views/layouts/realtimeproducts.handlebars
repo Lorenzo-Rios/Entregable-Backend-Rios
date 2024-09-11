@@ -19,13 +19,10 @@
     const socket = io();
     const form = document.getElementById('productForm');
     const productList = document.getElementById('productsList');
-
     form.addEventListener('submit', async (event) => {
         event.preventDefault();
-
         const formData = new FormData(form);
         const data = Object.fromEntries(formData.entries());
-
         try {
             const response = await fetch('/api/product', {
                 method: 'POST',
@@ -34,7 +31,6 @@
                 },
                 body: JSON.stringify(data)
             });
-
             if (response.ok) {
                 form.reset(); // Limpiar el formulario
             } else {
@@ -44,14 +40,32 @@
             console.error('Error en la solicitud:', error);
         }
     });
-    
+
     socket.on('productList', (products) => {
         productList.innerHTML = '';
-
         products.forEach((product) => {
             const li = document.createElement('li');
-            li.textContent = `${product.title} - $${product.price}`;
+            li.textContent = `${product.title} - $${product.price} - Stock disponible:${product.stock} - ${product.thumbnail}`;
             productList.appendChild(li);
+            const deleteButton = document.createElement('button')
+            deleteButton.textContent = `Eliminar`
+            deleteButton.onclick = async () => {
+                try {
+                    const response = await fetch(`/api/product/${product.id}`, {
+                        method: 'DELETE'
+                    })
+                    const message = await response.text();
+                    if (response.ok) {
+                        console.log(message);
+                    } else {
+                        console.log('Error al eliminar el producto')
+                    }
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+            li.appendChild(deleteButton)
+            productList.appendChild(li)
         });
     });
 </script>

@@ -14,6 +14,10 @@ import { __dirname } from '../utils/dirname.js';
 import ProductRoute from '../routes/Client/Products/Products.routes.js'
 import CartRoute from '../routes/Client/Carts/Carts.routes.js'
 import ViewRoute from '../routes/Client/Views/Views.routes.js'
+import UserRoute from '../routes/Client/Users/Users.routes.js'
+
+/* DB */
+import db from './connection.db.js'
 
 export default class Server {
     constructor () {
@@ -23,6 +27,7 @@ export default class Server {
         this.port = process.env.SERVER_PORT || '8080';
         this.apiPaht = {
             product: '/api/product',
+            user: '/api/user',
             cart: '/api/cart'
         }
 
@@ -31,9 +36,10 @@ export default class Server {
         this.viewEngine();
         this.router();
         this.initializeSocketIo();
+        this.connectDB();
     }
 
-    middlewares() {
+    middlewares () {
         this.app.use(cors({
             origin: '*'
         }));
@@ -47,7 +53,11 @@ export default class Server {
         })
     }
 
-    viewEngine() {
+    connectDB () {
+        db();
+    }
+
+    viewEngine () {
         this.app.engine('handlebars', engine({
             layoutsDir: path.join(__dirname, '../views/layouts')
         }));
@@ -64,13 +74,14 @@ export default class Server {
         })
     }
 
-    router() {
-        this.app.use('/', ViewRoute);
+    router () {
+        //this.app.use('/', ViewRoute);
         this.app.use(this.apiPaht.product, ProductRoute);
         this.app.use(this.apiPaht.cart, CartRoute);
+        this.app.use(this.apiPaht.user, UserRoute);
     }
 
-    listen() {
+    listen () {
         this.server.listen(this.port, () => {
             console.log(`✅ Servidor corriendo en el puerto ${this.port}`);
         })

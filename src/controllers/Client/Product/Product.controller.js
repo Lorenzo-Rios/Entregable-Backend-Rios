@@ -1,33 +1,16 @@
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const productsFile = path.join(__dirname, '../../../../dbjson/products.json');
-
-const readProducts = async () => {
-    const data = await fs.promises.readFile(productsFile, 'utf8');
-    return JSON.parse(data);
-};
-
-const writeProducts = async (products) => {
-    await fs.promises.writeFile(productsFile, JSON.stringify(products, null, 2), 'utf8');
-};
+import { productModel } from '../../../models/products.model.js'
 
 async function GetProduct(req, res) {
     try {
-        const limit = req.query.limit;
-        const products = await readProducts();
-        res.json(limit ? products.slice(0, limit) : products);
+        const products = await productModel.find()
+        res.send({ status: 'succes', payload: products})
     } catch (error) {
-        console.error('Error en GetProduct:', error); // Detalle del error
+        console.error('Error en GetProduct:', error);
         res.status(500).send('Error fetching products');
     }
 }
 
-async function PostProduct(req, res) {
+/*async function PostProduct(req, res) {
     try {
         const products = await readProducts();
         const newProduct = {
@@ -49,7 +32,23 @@ async function PostProduct(req, res) {
     }
 }
 
+async function DeleteProduct(req, res) {
+    try {
+        const { id } = req.params;
+        let products = await readProducts();
+
+        products = products.filter(product => product.id != id);
+
+        await writeProducts(products);
+
+        res.status(200).send('Producto eliminado')
+        req.io.emit('productList', products);
+    } catch (error) {
+        console.log('Error en DeleteProduct'); 
+        res.status(500).send('Error en borrar el producto');
+    }
+}*/
+
 export {
-    PostProduct,
     GetProduct
 };
