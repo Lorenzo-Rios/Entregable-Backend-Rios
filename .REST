@@ -1,0 +1,31 @@
+###________PRODUCTS
+GET http://localhost:8080/api/product
+###
+POST http://localhost:8080/api/product
+###
+PUT http://localhost:8080/api/product
+
+
+
+###________USERS
+GET http://localhost:8080/api/user
+###
+POST http://localhost:8080/api/user
+Content-Type : application/json
+
+{
+    "first_name": "Lorenzo Rios",
+    "user_name": "lolorioss_",
+    "email": "lologmail.com",
+    "password": "holamundo"
+}
+###
+PUT  http://localhost:8080/api/user/66e1e5853080b8ca2ff93883
+Content-Type : application/json
+
+{
+    "first_name": "Lorenzo Rios",
+    "user_name": "lolorioss_",
+    "email": "lolo@gmail.com",
+    "password": "mundohola"
+}

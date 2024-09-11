@@ -1,37 +1,38 @@
 import { Schema, model } from 'mongoose'
 
-const userCollection = 'users'
+const usersCollection = 'users'
 
-const userSchema = new Schema ({
+const usersSchema = new Schema ({
     first_name: {
-        required: true,
-        type: String
+        type: String,
+        required: true
     },
+
     last_name: {
-        required: true,
         type: String
     },
+
     user_name: {
-        required: true,
-        unique: true,
-        type: String
+        type: String,
+        required: true
     },
+
     email: {
+        type: String,
         required: true,
-        unique: true,
-        type: String
+        unique: true
     },
     password: {
-        required: true,
-        type: String
+        type: String,
+        required: true
     },
     phone: {
-        unique: true,
-        type: Number
+        type: String,
+        unique: true
     }
 })
 
-const userModel = model(userCollection, userSchema)
+const userModel = model(usersCollection, usersSchema)
 
 export {
     userModel
