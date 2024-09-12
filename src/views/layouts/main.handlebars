@@ -1,23 +1,38 @@
-<body>
+<div>
     <header>
-        <h1>Sitio web</h1>
-        <nav>
-            <ul>
-                <li><a href="/home">Home</a></li>
-                <li><a href="/chat">Chat</a></li>
-                <li><a href="/realtimeproducts">Real-Time Products</a></li>
-            </ul>
-        </nav>
+        <h1>
+            Bienvenido
+        </h1>
     </header>
+    <nav>
+        <li>
+            <a href="/realtimeproducts">
+                RealTimeProduct
+            </a>
+        </li>
 
+        <li>
+            <a href="/chat">
+                Chat
+            </a>
+        </li>
+
+        <li>
+            <a href="/cart">
+                Cart
+            </a>
+        </li>
+
+        <li>
+            <a href="/User">
+                User
+            </a>
+        </li>
+    </nav>
     <main>
         {{{body}}}
     </main>
-
-    <footer>
-        <p>Pie de pagina</p>
-    </footer>
-</body>
+</div>
 <script>
     console.log('Usuario conectado al servidor');
     console.log('Socket.IO conectado');

@@ -4,31 +4,29 @@ const usersCollection = 'users'
 
 const usersSchema = new Schema ({
     first_name: {
-        type: String,
-        required: true
+        required: true,
+        type: String
     },
-
     last_name: {
         type: String
     },
-
     user_name: {
-        type: String,
-        required: true
-    },
-
-    email: {
-        type: String,
         required: true,
-        unique: true
+        unique: true,
+        type: String
+    },
+    email: {
+        required: true,
+        unique: true,
+        type: String
     },
     password: {
-        type: String,
-        required: true
+        required: true,
+        type: String
     },
     phone: {
-        type: String,
-        unique: true
+        unique: true,
+        type: Number
     }
 })
 

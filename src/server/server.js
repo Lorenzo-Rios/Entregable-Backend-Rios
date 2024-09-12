@@ -15,6 +15,7 @@ import ProductRoute from '../routes/Client/Products/Products.routes.js'
 import CartRoute from '../routes/Client/Carts/Carts.routes.js'
 import ViewRoute from '../routes/Client/Views/Views.routes.js'
 import UserRoute from '../routes/Client/Users/Users.routes.js'
+import OrderRoute from '../routes/Client/Orders/Orders.routes.js'
 
 /* DB */
 import db from './connection.db.js'
@@ -28,7 +29,8 @@ export default class Server {
         this.apiPaht = {
             product: '/api/product',
             user: '/api/user',
-            cart: '/api/cart'
+            cart: '/api/cart',
+            order: '/api/order'
         }
 
         this.app.set('io', this.io);
@@ -68,17 +70,22 @@ export default class Server {
     initializeSocketIo() {
         this.io.on('connection', (socket) =>{
             console.log('Usuario conectado');
+            socket.on('chatMessage', (message) => {
+                this.io.emit('chatMessage', message); // Emitir el mensaje a todos los clientes conectados
+            });
             socket.on('disconnect', () => {
                 console.log('Usuario desconectado');
             })
+
         })
     }
 
     router () {
-        //this.app.use('/', ViewRoute);
+        this.app.use('/', ViewRoute);
         this.app.use(this.apiPaht.product, ProductRoute);
         this.app.use(this.apiPaht.cart, CartRoute);
         this.app.use(this.apiPaht.user, UserRoute);
+        this.app.use(this.apiPaht.order, OrderRoute);
     }
 
     listen () {

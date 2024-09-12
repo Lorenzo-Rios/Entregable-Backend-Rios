@@ -1,0 +1,20 @@
+<h1>Carritos</h1>
+
+<ul id="cartsList">
+    <!-- Lista de carritos -->
+</ul>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io();
+    const cartsList = document.getElementById('cartsList');
+
+    socket.on('cartsList', (carts) => {
+        cartsList.innerHTML = '';
+        carts.forEach((cart) => {
+            const li = document.createElement('li');
+            li.textContent = `Cart ID: ${cart._id}, Products: ${cart.products.length}`;
+            cartsList.appendChild(li);
+        });
+    });
+</script>

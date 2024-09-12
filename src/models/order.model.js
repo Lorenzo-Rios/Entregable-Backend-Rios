@@ -1,4 +1,5 @@
 import { Schema, model } from 'mongoose'
+import mongoosePaginate from 'mongoose-paginate-v2'
 
 const ordersCollection = 'orders'
 
@@ -14,6 +15,8 @@ const ordersSchema = new Schema ({
         type: Number
     }
 })
+
+ordersSchema.plugin(mongoosePaginate)
 
 const orderModel = model(ordersCollection, ordersSchema);
 

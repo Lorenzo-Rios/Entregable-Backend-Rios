@@ -1,0 +1,51 @@
+<h1>Usuarios</h1>
+
+<form id="userForm">
+    <input type="text" name="first_name" placeholder="Nombre" required>
+    <input type="text" name="user_name" placeholder="Nombre de Usuario" required>
+    <input type="email" name="email" placeholder="Email" required>
+    <input type="password" name="password" placeholder="Contraseña" required>
+    <button type="submit">Agregar Usuario</button>
+</form>
+
+<ul id="usersList">
+    <!-- Lista de usuarios -->
+</ul>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io();
+    const form = document.getElementById('userForm');
+    const usersList = document.getElementById('usersList');
+
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+        try {
+            const response = await fetch('/api/user', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+            if (response.ok) {
+                form.reset(); // Limpiar el formulario
+            } else {
+                console.error('Error al agregar el usuario');
+            }
+        } catch (error) {
+            console.error('Error en la solicitud:', error);
+        }
+    });
+
+    socket.on('usersList', (users) => {
+        usersList.innerHTML = '';
+        users.forEach((user) => {
+            const li = document.createElement('li');
+            li.textContent = `${user.first_name} (${user.user_name}) - ${user.email}`;
+            usersList.appendChild(li);
+        });
+    });
+</script>

@@ -2,10 +2,6 @@ async function renderMain(req, res) {
     res.render('main')
 }
 
-async function renderHome(req, res) {
-    res.render('home')
-}
-
 async function renderChat(req, res) {
     res.render('chat')
 }
@@ -13,10 +9,18 @@ async function renderRealTimeProducts(req, res) {
     res.render('realtimeproducts')
 }
 
+async function renderCart( req, res ) {
+    res.render('cart')
+}
+
+async function renderUser( req, res ) {
+    res.render('user')
+}
 
 export{
     renderMain,
-    renderHome,
     renderChat,
-    renderRealTimeProducts
+    renderRealTimeProducts,
+    renderCart,
+    renderUser
 }

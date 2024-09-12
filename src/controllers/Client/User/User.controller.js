@@ -36,16 +36,29 @@ async function PutUser ( req, res ) {
             return res.status(400).send({ status: 'error', error: 'Faltan completar los campos requeridos!'})
         }
     
-        const response = await userModel.updateOne({ _id: uid}, userToReplace)
-        res.status(200).send({ status: 'success', message: 'Usuario actualizado!', data: response })
+        const response = await userModel.updateOne({ _id: uid }, userToReplace)
+        res.status(200).send({ status: 'success', message: 'Usuario actualizado con exito!', data: response })
     } catch (error) {
         console.error('Error en PutUser:', error);
-        res.status(500).send('Error puting Users');
+        res.status(500).send('Error puting User');
+    }
+}
+
+async function DeleteUser( req, res ) {
+    try {
+        const { uid } = req.params
+        const response = await userModel.deleteOne({ _id: uid})
+
+        res.status(200).send({ satus: 'success', message: 'Usuario borrado con exito!', data: response })
+    } catch (error) {
+        console.error('Error en DeleteUser:', error);
+        res.status(500).send('Error deleting User');
     }
 }
 
 export {
     GetUser,
     PostUser,
-    PutUser
+    PutUser,
+    DeleteUser
 }
