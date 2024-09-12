@@ -14,7 +14,7 @@ async function PostProduct ( req, res ) {
     try {
         const { body } = req
     
-        if (!body.tittle & !body.stock & !body.price & !body.code){
+        if (!body.tittle || !body.description || !body.stock || !body.price || !body.code){
             return res.status(400).send({ status: 'error', error: 'Faltan completar los campos requeridos!'})
         }
         const response = await productModel.create(body)
@@ -33,7 +33,7 @@ async function PutProduct( req, res ) {
     
         let productToReplace = req.body
     
-        if (!productToReplace.tittle || !productToReplace.stock || !productToReplace.price || !productToReplace.code){
+        if (!productToReplace.tittle || !productToReplace.description || !productToReplace.stock || !productToReplace.price || !productToReplace.code){
             return res.status(400).send({ status: 'error', error: 'Faltan completar los campos requeridos!'})
         }
         

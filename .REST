@@ -2,18 +2,20 @@
 GET http://localhost:8080/api/product
 ###
 POST http://localhost:8080/api/product
-###
-PUT http://localhost:8080/api/product/66e1e12a1696b5ef0ed5b282
 Content-Type : application/json
 
 {
-    "tittle": "Hamburguesa",
+    "tittle": "cafe",
+    "description": "cafe mixto",
     "stock": 100,
     "price": 500,
     "code": "020"
 }
 ###
-DELETE http://localhost:8080/api/product/66e25c8c043702d76964d519
+PUT http://localhost:8080/api/product/66e1e12a1696b5ef0ed5b282
+
+###
+DELETE http://localhost:8080/api/product/66e1e12a1696b5ef0ed5b282
 
 
 
@@ -25,24 +27,26 @@ Content-Type : application/json
 
 {
     "first_name": "Carlos",
+    "last_name": "Duran",
     "user_name": "carlos_",
     "email": "carlos@gmail.com",
     "password": "holamundo",
     "phone": 2213046644
 }
 ###
-PUT http://localhost:8080/api/user/
+PUT http://localhost:8080/api/user/66e33dd07bb826fec2033d3e
 Content-Type : application/json
 
 {
-    "first_name": "cArlos",
-    "user_name": "carrlos_",
-    "email": "carlos@gmail.com",
-    "password": "carlos123",
-    "phone": 221213123
+    "first_name": "CarLos",
+    "last_name": "DuRan",
+    "user_name": "caarlos_",
+    "email": "carl@gmail.com",
+    "password": "quetal",
+    "phone": 2213046644
 }
 ###
-DELETE http://localhost:8080/api/user/
+DELETE http://localhost:8080/api/user/66e33dd07bb826fec2033d3e
 
 ###________Orders
 GET http://localhost:8080/api/order

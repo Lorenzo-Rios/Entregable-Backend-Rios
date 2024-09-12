@@ -2,9 +2,11 @@
 
 <form id="userForm">
     <input type="text" name="first_name" placeholder="Nombre" required>
+    <input type="text" name="last_name" placeholder="Apellido">
     <input type="text" name="user_name" placeholder="Nombre de Usuario" required>
     <input type="email" name="email" placeholder="Email" required>
     <input type="password" name="password" placeholder="Contraseña" required>
+    <input type="text" name="phone" placeholder="Teléfono">
     <button type="submit">Agregar Usuario</button>
 </form>
 
@@ -44,7 +46,27 @@
         usersList.innerHTML = '';
         users.forEach((user) => {
             const li = document.createElement('li');
-            li.textContent = `${user.first_name} (${user.user_name}) - ${user.email}`;
+            li.textContent = `${user.first_name} ${user.last_name || ''} (${user.username}) - ${user.email} - ${user.phone || 'Sin teléfono'}`;
+            usersList.appendChild(li);
+
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = `Eliminar`;
+            deleteButton.onclick = async () => {
+                try {
+                    const response = await fetch(`/api/user/${user._id}`, {
+                        method: 'DELETE'
+                    });
+                    const message = await response.text();
+                    if (response.ok) {
+                        console.log(message);
+                    } else {
+                        console.log('Error al eliminar el usuario');
+                    }
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+            li.appendChild(deleteButton);
             usersList.appendChild(li);
         });
     });
