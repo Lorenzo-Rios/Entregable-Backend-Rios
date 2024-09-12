@@ -1,20 +1,55 @@
-<h1>Carritos</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito</title>
+</head>
+<body>
+    <h1>Carrito</h1>
+    <ul id="cartProducts">
+        {{#each cart.products}}
+            <li>
+                {{this.product.name}} - {{this.quantity}}
+                <button onclick="removeFromCart('{{this.product._id}}')">Eliminar</button>
+            </li>
+        {{/each}}
+    </ul>
+    <button onclick="placeOrder()">Ordenar</button>
 
-<ul id="cartsList">
-    <!-- Lista de carritos -->
-</ul>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        const cartProducts = document.getElementById('cartProducts');
 
-<script src="/socket.io/socket.io.js"></script>
-<script>
-    const socket = io();
-    const cartsList = document.getElementById('cartsList');
+        function removeFromCart(productId) {
+            fetch(`/api/cart/${cartId}/product/${productId}`, {
+                method: 'DELETE'
+            }).then(response => {
+                if (response.ok) {
+                    alert('Producto eliminado del carrito');
+                    location.reload(); // Recargar la página para actualizar la lista
+                } else {
+                    alert('Error al eliminar el producto');
+                }
+            });
+        }
 
-    socket.on('cartsList', (carts) => {
-        cartsList.innerHTML = '';
-        carts.forEach((cart) => {
-            const li = document.createElement('li');
-            li.textContent = `Cart ID: ${cart._id}, Products: ${cart.products.length}`;
-            cartsList.appendChild(li);
-        });
-    });
-</script>
+        function placeOrder() {
+            fetch('/api/order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ cartId })
+            }).then(response => {
+                if (response.ok) {
+                    alert('Orden realizada con éxito');
+                } else {
+                    alert('Error al realizar la orden');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

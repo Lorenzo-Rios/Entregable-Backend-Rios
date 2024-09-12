@@ -10,20 +10,15 @@ async function GetOrder ( req, res ) {
     }
 }
 
-async function PostOrder ( req, res ) {
+async function PostOrder(req, res) {
     try {
-        const { body } = req
-    
-        if (!body.name || !body.price || !body.quantity ){
-            return res.status(400).send({ status: 'error', error: 'Faltan completar los campos requeridos!'})
-        }
-
-        const response = await orderModel.create(body)
-
-        res.status(200).send({ data: response })
+        const { cartId } = req.body;
+        const newOrder = new orderModel({ cart: cartId, date: new Date() });
+        await newOrder.save();
+        res.status(201).send('Orden generada con exito!');
     } catch (error) {
         console.error('Error en PostOrder:', error);
-        res.status(500).send('Error posting Order');
+        res.status(500).send('Error placing order');
     }
 }
 

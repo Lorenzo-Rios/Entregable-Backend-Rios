@@ -5,11 +5,11 @@ POST http://localhost:8080/api/product
 Content-Type : application/json
 
 {
-    "tittle": "cafe",
-    "description": "cafe mixto",
+    "tittle": "tarta",
+    "description": "tarta de zapallo",
     "stock": 100,
-    "price": 500,
-    "code": "020"
+    "price": 5000,
+    "code": "030"
 }
 ###
 PUT http://localhost:8080/api/product/66e1e12a1696b5ef0ed5b282
@@ -74,3 +74,31 @@ Content-Type : application/json
 }
 ###
 DELETE http://localhost:8080/api/order/
+
+
+###________Carts
+GET http://localhost:8080/api/cart
+###
+POST http://localhost:8080/api/cart
+Content-Type : application/json
+
+{
+    "first_name": "Carlos",
+    "user_name": "carlos_",
+    "email": "carlos@gmail.com",
+    "password": "holamundo",
+    "phone": 2213046644
+}
+###
+PUT http://localhost:8080/api/cart/
+Content-Type : application/json
+
+{
+    "first_name": "cArlos",
+    "user_name": "carrlos_",
+    "email": "carlos@gmail.com",
+    "password": "carlos123",
+    "phone": 221213123
+}
+###
+DELETE http://localhost:8080/api/cart/
