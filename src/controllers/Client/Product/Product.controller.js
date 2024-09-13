@@ -3,26 +3,41 @@ import { productModel } from '../../../models/products.model.js';
 async function GetProduct(req, res) {
     try {
         const { page = 1, limit = 10 } = req.query;
+
+        // Convertir 'page' y 'limit' a enteros
+        const pageNumber = parseInt(page, 10) || 1;
+        const limitNumber = parseInt(limit, 10) || 10;
+
+        // Configuración de opciones para la paginación
         const options = {
-            page,
-            limit,
-            lean: true,
-            customLabels: {
-                totalDocs: 'total',
-                docs: 'payload',
-                totalPages: 'totalPages',
-                page: 'page',
-                prevPage: 'prevPage',
-                nextPage: 'nextPage',
-                hasPrevPage: 'hasPrevPage',
-                hasNextPage: 'hasNextPage',
-                prevLink: 'prevLink',
-                nextLink: 'nextLink'
-            }
+            page: pageNumber,
+            limit: limitNumber,
         };
 
+        // Aplicar paginación usando los valores de page y limit
         const result = await productModel.paginate({}, options);
-        res.send(result);
+
+        // Verifica si result.docs tiene productos y responde adecuadamente
+        if (!result.docs || result.docs.length === 0) {
+            return res.status(404).send({
+                status: 'error',
+                message: 'No products found'
+            });
+        }
+
+        // Enviar respuesta con los productos paginados
+        res.send({
+            status: 'success',
+            payload: result.docs,  
+            totalPages: result.totalPages,
+            currentPage: result.page, 
+            prevPage: result.prevPage,
+            nextPage: result.nextPage,
+            hasPrevPage: result.hasPrevPage,
+            hasNextPage: result.hasNextPage,
+            prevLink: result.hasPrevPage ? `/products?page=${result.prevPage}&limit=${limitNumber}` : null,
+            nextLink: result.hasNextPage ? `/products?page=${result.nextPage}&limit=${limitNumber}` : null
+        });
     } catch (error) {
         console.error('Error en GetProduct:', error);
         res.status(500).send('Error fetching products');

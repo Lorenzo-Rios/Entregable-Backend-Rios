@@ -31,6 +31,7 @@ async function renderProducts(req, res) {
         res.render('products', {
             products: result.payload,
             totalPages: result.totalPages,
+            currentPage: result.currentPage, 
             prevPage: result.prevPage,
             nextPage: result.nextPage,
             hasPrevPage: result.hasPrevPage,

@@ -10,11 +10,13 @@
     <ul id="cartProducts">
         {{#each cart.products}}
             <li>
-                {{this.product.name}} - {{this.quantity}}
+                {{this.product.tittle}} - Cantidad: {{this.quantity}} - 
+                Precio Total: ${{multiply this.product.price this.quantity}}
                 <button onclick="removeFromCart('{{this.product._id}}')">Eliminar</button>
             </li>
         {{/each}}
     </ul>
+    <h3>Total a pagar: ${{cartTotal}}</h3>
     <button onclick="placeOrder()">Ordenar</button>
 
     <script src="/socket.io/socket.io.js"></script>

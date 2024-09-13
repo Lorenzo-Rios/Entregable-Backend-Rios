@@ -1,8 +1,10 @@
 import { orderModel } from '../../../models/order.model.js'
 
 async function GetOrder ( req, res ) {
+        let limit;
+        let page;
     try {
-        const orders = await orderModel.find()
+        const orders = await orderModel.paginate({}, {page: 1, limit: 10})
         res.send({ status: 'success', payload: orders })
     } catch (error) {
         console.error('Error en GetOrder:', error);
@@ -11,14 +13,31 @@ async function GetOrder ( req, res ) {
 }
 
 async function PostOrder(req, res) {
+    const { cartId } = req.body;
+
     try {
-        const { cartId } = req.body;
-        const newOrder = new orderModel({ cart: cartId, date: new Date() });
-        await newOrder.save();
-        res.status(201).send('Orden generada con exito!');
-    } catch (error) {
-        console.error('Error en PostOrder:', error);
-        res.status(500).send('Error placing order');
+        const cart = await cartModel.findById(cartId).populate('products.product');
+        if (!cart || cart.products.length === 0) {
+            return res.status(400).json({ message: 'Cart is empty or not found' });
+        }
+
+        // Crear la orden
+        const order = new orderModel({
+            cartId,
+            products: cart.products,
+            total: cart.products.reduce((total, p) => total + p.product.price * p.quantity, 0),
+            date: new Date(),
+        });
+
+        await order.save();
+
+        // Vaciar el carrito después de la orden
+        cart.products = [];
+        await cart.save();
+
+        return res.status(200).json({ message: 'Orden generada con exito!', order });
+    } catch (err) {
+        return res.status(500).json({ message: 'Error al generar la orden!' });
     }
 }
 
