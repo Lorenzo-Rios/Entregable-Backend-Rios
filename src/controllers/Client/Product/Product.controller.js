@@ -4,7 +4,6 @@ async function GetProduct(req, res) {
     try {
         const { page = 1, limit = 10 } = req.query;
 
-        // Convertir 'page' y 'limit' a enteros
         const pageNumber = parseInt(page, 10) || 1;
         const limitNumber = parseInt(limit, 10) || 10;
 
@@ -25,7 +24,6 @@ async function GetProduct(req, res) {
             });
         }
 
-        // Enviar respuesta con los productos paginados
         res.send({
             status: 'success',
             payload: result.docs,  

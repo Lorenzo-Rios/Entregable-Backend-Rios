@@ -61,7 +61,10 @@ export default class Server {
 
     viewEngine () {
         this.app.engine('handlebars', engine({
-            layoutsDir: path.join(__dirname, '../views/layouts')
+            layoutsDir: path.join(__dirname, '../views/layouts'),
+            runtimeOptions: {
+                allowProtoPropertiesByDefault: true
+            }
         }));
         this.app.set('view engine', 'handlebars');
         this.app.set('views', path.join(__dirname, '../views/layouts'));

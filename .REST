@@ -1,9 +1,8 @@
 
 
-DELETE http://localhost:8080/api/cart/66e443b827920ffbac68bdfe/products/66e1d75ba386b41984292f0b
+PUT http://localhost:8080/api/cart/66e4460b1b06874f35cef28f/products/66e3b1b0443ff6fb4d1a092b
 Content-Type: application/json
 
 {
-    "product_id": "",
-    "quantity": 3
+    "quantity": 10
 }
