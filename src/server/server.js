@@ -4,6 +4,8 @@ import cors from 'cors'
 import morgan from 'morgan'
 import { Server as socketIo } from 'socket.io'
 import { engine } from 'express-handlebars'
+import cookieParser from 'cookie-parser'
+import Session from 'express-session'
 
 /* Access */
 import http from 'http';
@@ -16,6 +18,8 @@ import CartRoute from '../routes/Client/Carts/Carts.routes.js'
 import ViewRoute from '../routes/Client/Views/Views.routes.js'
 import UserRoute from '../routes/Client/Users/Users.routes.js'
 import OrderRoute from '../routes/Client/Orders/Orders.routes.js'
+import PruebaRoute from '../routes/Client/Pruebas/Pruebas.routes.js'
+import SessionRoute from '../routes/Client/Sessions/Sessions.routes.js'
 
 /* DB */
 import db from './connection.db.js'
@@ -30,7 +34,9 @@ export default class Server {
             product: '/api/product',
             user: '/api/user',
             cart: '/api/cart',
-            order: '/api/order'
+            order: '/api/order',
+            prueba: '/api/prueba',
+            session: '/api/session'
         }
 
         this.app.set('io', this.io);
@@ -49,6 +55,12 @@ export default class Server {
         this.app.use(express.json({ limit: '50mb' }));     
         this.app.use(express.urlencoded({ extended: true }));
         this.app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+        this.app.use(cookieParser())
+        this.app.use(Session({
+            secret: 'secretcoder',
+            resave: true,
+            saveUninitialized: true
+        }))
         this.app.use((req, res, next) => {
             req.io = this.io;
             next();
@@ -85,6 +97,8 @@ export default class Server {
 
     router () {
         this.app.use('/', ViewRoute);
+        this.app.use(this.apiPaht.prueba, PruebaRoute);
+        this.app.use(this.apiPaht.session, SessionRoute);
         this.app.use(this.apiPaht.product, ProductRoute);
         this.app.use(this.apiPaht.cart, CartRoute);
         this.app.use(this.apiPaht.user, UserRoute);

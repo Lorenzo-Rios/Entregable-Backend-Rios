@@ -4,8 +4,9 @@ class CartController {
     // Obtener un carrito por ID
     static async getCart(req, res) {
         try {
-            const cartId = '66e4460b1b06874f35cef28f';  // ID fijo del carrito
-            const cart = await CartManager.getCartById(cartId);
+            //const cartId = '66e4460b1b06874f35cef28f';  // ID fijo del carrito
+            const { cid } = req.params
+            const cart = await CartManager.getCartById(cid);
             res.send(cart);
         } catch (error) {
             res.status(500).send({ error: error.message });
@@ -15,11 +16,11 @@ class CartController {
     // Agregar un producto al carrito
     static async addProduct(req, res) {
         try {
-            const cartId = '66e4460b1b06874f35cef28f';  // ID fijo del carrito
-            const { pid } = req.params;
+            //const cartId = '66e4460b1b06874f35cef28f';  // ID fijo del carrito
+            const { cid, pid } = req.params;
             const { quantity } = req.body;
 
-            const cart = await CartManager.addProductToCart(cartId, pid, quantity);
+            const cart = await CartManager.addProductToCart(cid, pid, quantity);
             res.send(cart);
         } catch (error) {
             res.status(500).send({ error: error.message });
@@ -29,10 +30,11 @@ class CartController {
     // Actualizar el carrito
     static async updateCart(req, res) {
         try {
-            const cartId = '66e4460b1b06874f35cef28f';  // ID fijo del carrito
+            //const cartId = '66e4460b1b06874f35cef28f';  // ID fijo del carrito
+            const { cid } = req.params  // ID fijo del carrito
             const { products } = req.body;
 
-            const cart = await CartManager.updateCart(cartId, products);
+            const cart = await CartManager.updateCart(cid, products);
             res.send(cart);
         } catch (error) {
             res.status(500).send({ error: error.message });
@@ -42,10 +44,10 @@ class CartController {
     // Eliminar un producto del carrito
     static async removeProduct(req, res) {
         try {
-            const cartId = '66e4460b1b06874f35cef28f';  // ID fijo del carrito
-            const { pid } = req.params;
+            //const cartId = '66e4460b1b06874f35cef28f';  // ID fijo del carrito
+            const { cid, pid } = req.params;
 
-            const cart = await CartManager.removeProductFromCart(cartId, pid);
+            const cart = await CartManager.removeProductFromCart(cid, pid);
             res.send(cart);
         } catch (error) {
             res.status(500).send({ error: error.message });
@@ -55,9 +57,9 @@ class CartController {
     // Eliminar todos los productos del carrito
     static async clearCart(req, res) {
         try {
-            const cartId = '66e4460b1b06874f35cef28f';  // ID fijo del carrito
-
-            const cart = await CartManager.clearCart(cartId);
+            //const cartId = '66e4460b1b06874f35cef28f';  // ID fijo del carrito
+            const { cid } = req.params
+            const cart = await CartManager.clearCart(cid);
             res.send(cart);
         } catch (error) {
             res.status(500).send({ error: error.message });
@@ -66,15 +68,15 @@ class CartController {
 
     static async updateProductQuantity(req, res) {
         try {
-            const cartId = '66e4460b1b06874f35cef28f';  // ID fijo del carrito
-            const { pid } = req.params;
+            //const cartId = '66e4460b1b06874f35cef28f';  // ID fijo del carrito
+            const { cid, pid } = req.params;
             const { quantity } = req.body;
 
             if (!quantity || quantity <= 0) {
                 return res.status(400).send({ error: 'Quantity must be a positive number' });
             }
 
-            const cart = await CartManager.updateProductQuantity(cartId, pid, quantity);
+            const cart = await CartManager.updateProductQuantity(cid, pid, quantity);
             res.send(cart);
         } catch (error) {
             res.status(500).send({ error: error.message });

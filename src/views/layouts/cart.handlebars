@@ -9,7 +9,7 @@
     <ul id="cartProducts">
         {{#each cart.products}}
             <li>
-                <strong>Producto:</strong> {{this.tittle}} <br>
+                <strong>Producto:</strong> {{this.product._id}} <br>
                 <strong>Precio:</strong> {{this.price}} <br>
                 <strong>Cantidad:</strong> {{this.quantity}} <br>
                 Precio Total: ${{multiply this.product.price this.quantity}}
@@ -20,9 +20,8 @@
     <h3>Total a pagar: ${{cartTotal}}</h3>
     <button onclick="placeOrder()">Ordenar</button>
 
-    <script src="/socket.io/socket.io.js"></script>
     <script>
-        const socket = io();
+        const cartId = '66e4460b1b06874f35cef28f'
         const cartProducts = document.getElementById('cartProducts');
 
         function removeFromCart(productId) {

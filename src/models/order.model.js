@@ -3,22 +3,57 @@ import mongoosePaginate from 'mongoose-paginate-v2'
 
 const ordersCollection = 'orders'
 
-const ordersSchema = new Schema ({
-    name: {
-        type: String
-    },
-    quantity: {
-        type: Number
+const orderSchema = new Schema ({
+    user: {
+        nombre: {
+            type: String
+        },
+
+        direccion: {
+            type: String
+        },
+
+        telefono: {
+            type: Number
+        }
     },
 
-    price:{
-        type: Number
+    metodoDePago: {
+        type: String,
+        enum: ['Efectivo', 'Mercado pago']
+    },
+
+    cart: {
+        products: [
+            {
+                product: {
+                    type: Schema.Types.ObjectId,
+                    ref: 'products'
+                },
+
+                price: {
+                    type: Number
+                },
+
+                quantity: {
+                    type: Number,
+                    default: 1
+                }
+
+            }
+        ]
+    },
+
+    estado: {
+        type: String,
+        enum: ['Pendiente', 'En camino', 'Realizada', 'Cancelada'],
+        default: 'Pendiente'
     }
 })
 
-ordersSchema.plugin(mongoosePaginate)
+orderSchema.plugin(mongoosePaginate)
 
-const orderModel = model(ordersCollection, ordersSchema);
+const orderModel = model(ordersCollection, orderSchema);
 
 export {
     orderModel

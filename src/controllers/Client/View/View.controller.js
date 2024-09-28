@@ -1,4 +1,4 @@
-import { productModel } from '../../../models/products.model.js';
+import { productModel } from '../../../models/product.model.js';
 import { cartModel } from '../../../models/cart.model.js'
 
 async function renderMain(req, res) {
@@ -18,7 +18,7 @@ async function renderCart(req, res) {
         const testCartId = '66e4460b1b06874f35cef28f';  
 
         // Consulta el carrito por su ID y usa `populate` para traer los productos completos
-        const cart = await cartModel.findById(testCartId).populate('products.product');
+        const cart = await cartModel.findById({ _id: testCartId })
 
         if (!cart) {
             return res.status(404).send('Carrito no encontrado');
@@ -26,7 +26,7 @@ async function renderCart(req, res) {
 
         // Mapea los productos para estructurarlos correctamente en la vista
         const cartProducts = cart.products.map(item => ({
-            productId: item.product._id,
+            productId: testCartId,
             tittle: item.product.tittle, 
             price: item.product.price,     
             quantity: item.quantity   
@@ -34,7 +34,7 @@ async function renderCart(req, res) {
 
         // Renderiza la vista del carrito con los productos del carrito
         res.render('cart', {
-            cartId: cart._id,
+            cartId: test,
             products: cartProducts
         });
     } catch (error) {
@@ -88,11 +88,21 @@ async function renderProducts(req, res) {
     }
 }
 
+async function renderRegister(req, res) {
+    res.render('register')
+}
+
+async function renderLogin(req, res) {
+    res.render('login')
+}
+
 export{
     renderMain,
     renderChat,
     renderRealTimeProducts,
     renderCart,
     renderUser,
-    renderProducts
+    renderProducts,
+    renderRegister,
+    renderLogin
 }

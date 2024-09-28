@@ -22,7 +22,7 @@
             <input type="number" id="quantity-{{this._id}}" min="1" max="{{this.stock}}" value="1">
 
             <!-- Pasa el ID del producto y la cantidad seleccionada a la función addToCart -->
-            <button onclick="addToCart('{{this._id}}')">Agregar al Carrito</button>
+            <button onclick="addToCart('{{this._id}} , {{this.price}}')">Agregar al Carrito</button>
         </li>
         {{/each}}
     </ul>
@@ -44,6 +44,7 @@
         const cartId = '66e4460b1b06874f35cef28f'; 
 
         function addToCart(productId) {
+            console.log(productId)
             const quantity = document.getElementById(`quantity-${productId}`).value; // Obtener la cantidad seleccionada
 
             fetch(`/api/cart/${cartId}/product/${productId}`, { 
