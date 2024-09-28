@@ -10,10 +10,6 @@ const cartSchema = new Schema({
                 ref: 'products'
             },
 
-            price: {
-                type: Number
-            },
-
             quantity: {
                 type: Number,
                 default: 1

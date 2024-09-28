@@ -1,8 +1,8 @@
 
 
-POST http://localhost:8080/api/cart/66f7673f2b7e2cd93082a1e6/products/66f7672c2b7e2cd93082a1e3
+POST http://localhost:8080/api/cart/66f7728152336cfd1dc02873/products/66e3385d5d64d4413f2df378
 Content-Type: application/json
 
 {
-
+    "quantity": 20
 }

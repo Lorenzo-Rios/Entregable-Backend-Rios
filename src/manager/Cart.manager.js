@@ -24,9 +24,7 @@ class CartManager {
             // Si no está, lo agrega al carrito
             cart.products.push({
                 product: productId,
-                quantity: quantity,
-                price: product.price,
-                total: product.price * quantity
+                quantity: quantity
             });
         }
 

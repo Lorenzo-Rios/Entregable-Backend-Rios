@@ -6,6 +6,7 @@ import { Server as socketIo } from 'socket.io'
 import { engine } from 'express-handlebars'
 import cookieParser from 'cookie-parser'
 import Session from 'express-session'
+import Handlebars from 'handlebars'
 
 /* Access */
 import http from 'http';
@@ -72,6 +73,9 @@ export default class Server {
     }
 
     viewEngine () {
+        Handlebars.registerHelper('multiply', function(a, b) {
+            return a * b;
+        });
         this.app.engine('handlebars', engine({
             layoutsDir: path.join(__dirname, '../views/layouts'),
             runtimeOptions: {

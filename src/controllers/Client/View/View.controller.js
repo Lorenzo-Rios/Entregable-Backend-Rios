@@ -14,29 +14,23 @@ async function renderRealTimeProducts(req, res) {
 
 async function renderCart(req, res) {
     try {
-        // Usa un ID de carrito manual para pruebas
-        const testCartId = '66e4460b1b06874f35cef28f';  
-
-        // Consulta el carrito por su ID y usa `populate` para traer los productos completos
-        const cart = await cartModel.findById({ _id: testCartId })
+        const testCartId = '66f7728152336cfd1dc02873'
+        const cart = await cartModel.findById(testCartId).populate('products.product');
 
         if (!cart) {
             return res.status(404).send('Carrito no encontrado');
         }
 
-        // Mapea los productos para estructurarlos correctamente en la vista
-        const cartProducts = cart.products.map(item => ({
-            productId: testCartId,
-            tittle: item.product.tittle, 
-            price: item.product.price,     
-            quantity: item.quantity   
-        }));
-
-        // Renderiza la vista del carrito con los productos del carrito
-        res.render('cart', {
-            cartId: test,
-            products: cartProducts
+        let cartTotal = 0;
+        cart.products.forEach(item => {
+            cartTotal += item.product.price * item.quantity;
         });
+
+        res.render('cart', {
+            cart: cart,
+            cartTotal: cartTotal
+        });
+
     } catch (error) {
         console.error('Error en renderCart:', error);
         res.status(500).send('Error al mostrar el carrito');

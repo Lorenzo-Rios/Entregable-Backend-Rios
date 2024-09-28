@@ -9,8 +9,9 @@
     <ul id="cartProducts">
         {{#each cart.products}}
             <li>
-                <strong>Producto:</strong> {{this.product._id}} <br>
-                <strong>Precio:</strong> {{this.price}} <br>
+                <strong>Id del Producto:</strong> {{this.product._id}} <br>
+                <strong>Nombre:</strong> {{this.product.tittle}} <br>
+                <strong>Precio:</strong> {{this.product.price}} <br>
                 <strong>Cantidad:</strong> {{this.quantity}} <br>
                 Precio Total: ${{multiply this.product.price this.quantity}}
                 <button onclick="removeFromCart('{{this.product._id}}')">Eliminar</button>
