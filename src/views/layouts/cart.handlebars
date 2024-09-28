@@ -13,7 +13,7 @@
                 <strong>Nombre:</strong> {{this.product.tittle}} <br>
                 <strong>Precio:</strong> {{this.product.price}} <br>
                 <strong>Cantidad:</strong> {{this.quantity}} <br>
-                Precio Total: ${{multiply this.product.price this.quantity}}
+                <strong>Total por unidad:</strong> ${{multiply this.product.price this.quantity}}
                 <button onclick="removeFromCart('{{this.product._id}}')">Eliminar</button>
             </li>
         {{/each}}
@@ -22,11 +22,11 @@
     <button onclick="placeOrder()">Ordenar</button>
 
     <script>
-        const cartId = '66e4460b1b06874f35cef28f'
+        const cartId = '66f7728152336cfd1dc02873'
         const cartProducts = document.getElementById('cartProducts');
 
         function removeFromCart(productId) {
-            fetch(`/api/cart/${cartId}/product/${productId}`, {
+            fetch(`/api/cart/${cartId}/products/${productId}`, {
                 method: 'DELETE'
             }).then(response => {
                 if (response.ok) {
