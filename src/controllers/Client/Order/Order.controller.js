@@ -1,3 +1,4 @@
+import { cartModel } from '../../../models/cart.model.js';
 import { orderModel } from '../../../models/order.model.js'
 
 async function GetOrder ( req, res ) {
@@ -13,24 +14,32 @@ async function GetOrder ( req, res ) {
 }
 
 async function PostOrder(req, res) {
-    const { cartId } = req.body;
+    const { cartId, user, metodoDePago } = req.body
 
     try {
-        const cart = await cartModel.findById(cartId).populate('products.product');
+        const cart = await cartModel.findById(cartId).populate('products.product')
+
         if (!cart || cart.products.length === 0) {
             return res.status(400).json({ message: 'Cart is empty or not found' });
         }
 
-        // Crear la orden
-        const order = new orderModel({
-            cartId,
-            products: cart.products,
-            total: cart.products.reduce((total, p) => total + p.product.price * p.quantity, 0),
-            date: new Date(),
-        });
+        const total = cart.products.reduce((total, item) => {
+            return total + (item.product.price * item.quantity);
+        }, 0);
 
-        await order.save();
-
+        const order = await orderModel.create({
+            user,
+            metodoDePago,
+            cart: {
+                products: cart.products.map(item => ({
+                    product: item.product._id, // ID del producto
+                    price: item.product.price, // Precio del producto
+                    quantity: item.quantity // Cantidad del producto
+                })),
+                total // Total calculado del carrito
+            },
+            estado: 'Pendiente'
+        })
         // Vaciar el carrito después de la orden
         cart.products = [];
         await cart.save();

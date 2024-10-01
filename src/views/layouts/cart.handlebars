@@ -17,8 +17,17 @@
                 <button onclick="removeFromCart('{{this.product._id}}')">Eliminar</button>
             </li>
         {{/each}}
-    </ul>
+    </ul><br>
     <h3>Total a pagar: ${{cartTotal}}</h3>
+    <form action="" id="form-user">
+        <input type="text" id="nombre" name="nombre" placeholder="Ingrese su nombre"><br>
+        <input type="text" id="direccion" name="direccion" placeholder="Ingrese su direccion"><br>
+        <input type="text" id="telefono" name="telefono" placeholder="Ingrese su telefono"><br>
+        <select id="metodoDePago" name="metodoDePago">
+            <option value="Efectivo">Efectivo</option>
+            <option value="Mercado pago">Mercado Pago</option>
+        </select>
+    </form>
     <button onclick="placeOrder()">Ordenar</button>
 
     <script>
@@ -39,12 +48,25 @@
         }
 
         function placeOrder() {
+            const nombre = document.getElementById('nombre').value
+            const direccion = document.getElementById('direccion').value
+            const telefono = document.getElementById('telefono').value
+            const metodoDePago = document.getElementById('metodoDePago').value
+
             fetch('/api/order', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ cartId })
+                body: JSON.stringify({ 
+                    cartId,
+                    user: {
+                        nombre,
+                        direccion,
+                        telefono,
+                    },
+                    metodoDePago
+                })
             }).then(response => {
                 if (response.ok) {
                     alert('Orden realizada con éxito');

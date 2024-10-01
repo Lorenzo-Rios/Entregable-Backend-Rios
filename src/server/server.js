@@ -76,12 +76,21 @@ export default class Server {
         Handlebars.registerHelper('multiply', function(a, b) {
             return a * b;
         });
+    
+        // Registrar el helper "json"
+        Handlebars.registerHelper('json', function(context) {
+            return JSON.stringify(context);
+        });
+    
+        // Configuración de Handlebars
         this.app.engine('handlebars', engine({
             layoutsDir: path.join(__dirname, '../views/layouts'),
             runtimeOptions: {
                 allowProtoPropertiesByDefault: true
             }
         }));
+        
+        // Establecer el motor de vistas
         this.app.set('view engine', 'handlebars');
         this.app.set('views', path.join(__dirname, '../views/layouts'));
     }

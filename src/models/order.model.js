@@ -41,7 +41,11 @@ const orderSchema = new Schema ({
                 }
 
             }
-        ]
+        ],
+
+        total: {
+            type: Number
+        }
     },
 
     estado: {
