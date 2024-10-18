@@ -8,7 +8,7 @@ import cookieParser from 'cookie-parser'
 import session from 'express-session'
 import Handlebars from 'handlebars'
 import FileStore from 'session-file-store'
-import mongoStore from 'connect-mongo'
+import MongoStore from 'connect-mongo'
 import 'dotenv/config'
 
 /* Access */
@@ -61,13 +61,13 @@ export default class Server {
         this.app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
         this.app.use(cookieParser(process.env.PRIVATE_KEY))
 
-        const fileStore = new FileStore(session)
-
+        //const fileStore = new FileStore(session)
+        
+        //coneccion de session con mongodb
         this.app.use(session({
-            store: new fileStore({
-                path: './sessions',
-                ttl: 1000,
-                retire: 0
+            store: MongoStore.create({
+                mongoUrl: process.env.MONGO_URL,
+                ttl: 1000
             }),
             secret: process.env.PRIVATE_KEY,
             resave: true,

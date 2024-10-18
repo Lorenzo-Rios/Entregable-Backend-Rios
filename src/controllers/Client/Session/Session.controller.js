@@ -1,16 +1,35 @@
 import { sessionModel } from "../../../models/session.model.js"
-import { UserManagerMongo } from "../../../manager/Mongo/User.manager.js"
-import { userModel } from "../../../models/user.model.js"
+import { UserManagerMongo } from "../../../manager/Mongo/userManager.mongo.js"
+
+const userService = new UserManagerMongo()
 
 async function PostRegister(req, res) {
-    const { body } = req
+    const { first_name, last_name, user_name, email, password, phone } = req.body
 
-    const response = await sessionModel.create(body)
+    if (!user_name || !email || !password) {
+        return res.send('Nombre de usuario y email obligatorios!').status(400)
+    }
 
-    res.status(200).send({ data: response })
+    const userFound = await userService.getUser( {email} )
 
+    if (userFound) {
+        return res.status(401).send({status: 'error', error: 'El usuario ya existe'})
+    }
+    
     try {
-        
+        const newUser = {
+            first_name,
+            last_name,
+            user_name,
+            email,
+            password,
+            phone
+        }
+    
+        const response = await userService.createUser( newUser )
+
+        res.send('Registrado correctamente').status({ status: 'success', data: response })
+
     } catch (error) {
         console.error('Error en PostRegister', error)
         res.status(500).send('Error regristando usuario')
@@ -20,14 +39,25 @@ async function PostRegister(req, res) {
 async function PostLogin(req, res) {
     const { user_name, password } = req.body
 
-    if (!user_name != "lolito_pincha" || !password != "1234") {
-        return res.send({status:'error', message: 'el usuario no existe'})
+    const userFound = await userService.getUser({ user_name })
+
+    if ( !userFound ) {
+        return res.status(400).send({status:'error', message: 'el usuario no existe'})
     }
 
-    req.session.user_name = user_name
-    req.session.admin = true
+    if ( userFound.user_name != user_name || userFound.password != password ) {
+        return res.status(401).send({status:'error', message: 'user name o password incorrectos'})
+    }
 
-    res.send('logeado correctamente')
+    try {     
+        req.session.user = {
+            user_name,
+            isAdmin: userFound.role === 'admin'
+        }
+        res.send('logeado correctamente')       
+    } catch (error) {
+        res.status(403).send({ message:'Error al logearse', data: {error} })
+    }
 }
 
 async function GetLogout(req, res) {
@@ -37,8 +67,13 @@ async function GetLogout(req, res) {
     res.send('logout')
 }
 
+async function GetData(req, res) {
+    res.send('datos sensibles')
+}
+
 export {
     PostRegister,
     PostLogin,
-    GetLogout
+    GetLogout,
+    GetData
 }

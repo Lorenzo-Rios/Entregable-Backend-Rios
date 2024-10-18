@@ -11,15 +11,10 @@
     <button type="submit">Agregar Usuario</button>
 </form>
 
-<ul id="usersList">
-    <!-- Lista de usuarios -->
-</ul>
-
 <script src="/socket.io/socket.io.js"></script>
 <script>
     const socket = io();
     const form = document.getElementById('userForm');
-    const usersList = document.getElementById('usersList');
 
     form.addEventListener('submit', async (event) => {
         event.preventDefault();
