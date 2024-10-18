@@ -28,6 +28,12 @@ const userSchema = new Schema ({
         unique: true,
         type: Number
     },
+
+    cart: {
+        type: Schema.Types.ObjectId,
+        ref: 'carts'
+    },
+
     role: {
         type: String,
         enum: ['user', 'admin'],

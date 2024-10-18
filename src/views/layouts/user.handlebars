@@ -43,32 +43,4 @@
         }
     });
 
-    socket.on('usersList', (users) => {
-        usersList.innerHTML = '';
-        users.forEach((user) => {
-            const li = document.createElement('li');
-            li.textContent = `${user.first_name} ${user.last_name || ''} (${user.username}) - ${user.email} - ${user.phone || 'Sin teléfono'}`;
-            usersList.appendChild(li);
-
-            const deleteButton = document.createElement('button');
-            deleteButton.textContent = `Eliminar`;
-            deleteButton.onclick = async () => {
-                try {
-                    const response = await fetch(`/api/user/${user._id}`, {
-                        method: 'DELETE'
-                    });
-                    const message = await response.text();
-                    if (response.ok) {
-                        console.log(message);
-                    } else {
-                        console.log('Error al eliminar el usuario');
-                    }
-                } catch (error) {
-                    console.log(error);
-                }
-            }
-            li.appendChild(deleteButton);
-            usersList.appendChild(li);
-        });
-    });
 </script>

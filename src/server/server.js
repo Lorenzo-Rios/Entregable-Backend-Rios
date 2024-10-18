@@ -5,11 +5,14 @@ import morgan from 'morgan'
 import { Server as socketIo } from 'socket.io'
 import { engine } from 'express-handlebars'
 import cookieParser from 'cookie-parser'
-import Session from 'express-session'
+import session from 'express-session'
 import Handlebars from 'handlebars'
+import FileStore from 'session-file-store'
+import mongoStore from 'connect-mongo'
+import 'dotenv/config'
 
 /* Access */
-import http from 'http';
+import http from 'http'
 import path from 'path'
 import { __dirname } from '../utils/dirname.js';
 
@@ -30,7 +33,7 @@ export default class Server {
         this.app = express();
         this.server = http.createServer(this.app);
         this.io = new socketIo(this.server);
-        this.port = process.env.SERVER_PORT || '8080';
+        this.port = process.env.SERVER_PORT || 8080;
         this.apiPaht = {
             product: '/api/product',
             user: '/api/user',
@@ -56,9 +59,17 @@ export default class Server {
         this.app.use(express.json({ limit: '50mb' }));     
         this.app.use(express.urlencoded({ extended: true }));
         this.app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-        this.app.use(cookieParser())
-        this.app.use(Session({
-            secret: 'secretcoder',
+        this.app.use(cookieParser(process.env.PRIVATE_KEY))
+
+        const fileStore = new FileStore(session)
+
+        this.app.use(session({
+            store: new fileStore({
+                path: './sessions',
+                ttl: 1000,
+                retire: 0
+            }),
+            secret: process.env.PRIVATE_KEY,
             resave: true,
             saveUninitialized: true
         }))

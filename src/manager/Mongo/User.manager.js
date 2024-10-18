@@ -1,8 +1,8 @@
-import { userModel } from '../../models/users.model'
+import { userModel } from '../../models/user.model.js'
 
 class UserManagerMongo {
     constructor() {
-        this.model: userModel
+        this.model = userModel
     }
 }
 

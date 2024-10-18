@@ -1,8 +1,14 @@
 
 
-DELETE http://localhost:8080/api/cart/66f7728152336cfd1dc02873/products/66e1d75ba386b41984292f0b
+POST http://localhost:8080/api/user
 Content-Type: application/json
 
 {
-
+    "first_name": "Lorenzo",
+    "last_name": "Rios",
+    "user_name": "lolito_pincha",
+    "email": "lolo@gmail.com",
+    "password": "1234",
+    "phone": "2213123",
+    "role": "admin"
 }
