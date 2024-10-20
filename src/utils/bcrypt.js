@@ -6,5 +6,6 @@ const isValidPassword = (passwordBody, userPassword) => bcrypt.compareSync(passw
 
 
 export {
-    bcrypt
-}
+    createHash,
+    isValidPassword
+}   

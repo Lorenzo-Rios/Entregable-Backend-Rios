@@ -1,5 +1,6 @@
 import { sessionModel } from "../../../models/session.model.js"
 import { UserManagerMongo } from "../../../manager/Mongo/userManager.mongo.js"
+import { createHash, isValidPassword } from "../../../utils/bcrypt.js"
 
 const userService = new UserManagerMongo()
 
@@ -22,13 +23,13 @@ async function PostRegister(req, res) {
             last_name,
             user_name,
             email,
-            password,
+            password: createHash(password),
             phone
         }
     
         const response = await userService.createUser( newUser )
 
-        res.send('Registrado correctamente').status({ status: 'success', data: response })
+        res.redirect('/login').status({ status: 'success', data: response })
 
     } catch (error) {
         console.error('Error en PostRegister', error)
@@ -45,7 +46,7 @@ async function PostLogin(req, res) {
         return res.status(400).send({status:'error', message: 'el usuario no existe'})
     }
 
-    if ( userFound.user_name != user_name || userFound.password != password ) {
+    if ( userFound.user_name != user_name || isValidPassword( password, userFound.password ) ) {
         return res.status(401).send({status:'error', message: 'user name o password incorrectos'})
     }
 
