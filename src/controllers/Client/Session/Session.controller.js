@@ -46,7 +46,7 @@ async function PostLogin(req, res) {
         return res.status(400).send({status:'error', message: 'el usuario no existe'})
     }
 
-    if ( userFound.user_name != user_name || isValidPassword( password, userFound.password ) ) {
+    if ( userFound.user_name != user_name || !isValidPassword( password, userFound.password ) ) {
         return res.status(401).send({status:'error', message: 'user name o password incorrectos'})
     }
 
