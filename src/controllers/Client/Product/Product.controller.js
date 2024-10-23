@@ -51,6 +51,7 @@ async function PostProduct(req, res) {
         }
 
         const response = await productModel.create(body);
+        
         res.status(200).send({ status: 'success', data: response });
     } catch (error) {
         console.error('Error en PostProduct:', error);

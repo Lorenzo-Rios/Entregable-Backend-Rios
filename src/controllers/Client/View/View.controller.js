@@ -90,6 +90,10 @@ async function renderLogin(req, res) {
     res.render('login')
 }
 
+async function renderChangePass(req, res) {
+    res.render('changepass')
+}
+
 export{
     renderMain,
     renderChat,
@@ -98,5 +102,6 @@ export{
     renderUser,
     renderProducts,
     renderRegister,
-    renderLogin
+    renderLogin,
+    renderChangePass
 }

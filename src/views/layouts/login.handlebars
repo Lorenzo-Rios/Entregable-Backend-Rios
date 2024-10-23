@@ -1,9 +1,12 @@
-<main>
+<main><br>
     <form action="/api/session/login" method="POST" id="">
-        <label for="">Logeate</label><br>
+        <h1>Inicia sesion</h1>
         <input type="text" name="user_name" placeholder="Ingrese su nombre de usuario" required><br>
-        <input type="password" name="password" placeholder="Ingrese su password" required><br>
+        <input type="password" name="password" placeholder="Ingrese su password" required><br><br>
         <button>Login</button>
-        <a href="/register">Registrarse</a>
+        <label for="">Todavia no te registraste?</label>
+        <a href="/register">Registrarse</a><br>
+        <label for="">Olvidaste tu contraseña?</label>
+        <a href="/newpass">Recuperar contraseña</a><br>
     </form>
 </main>

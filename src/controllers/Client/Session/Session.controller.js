@@ -68,6 +68,36 @@ async function GetLogout(req, res) {
     res.send('logout')
 }
 
+async function PostChangePass(req, res) {
+    const { user_name, newPassword } = req.body;
+
+    if (!user_name || !newPassword) {
+        return res.status(400).send({ status: 'error', message: 'El usuario y la nueva contraseña son requeridos.' });
+    }
+
+    const userFound = await userService.getUser({ user_name });
+
+    if (!userFound) {
+        return res.status(400).send({ status: 'error', error: 'El usuario no existe!' });
+    }
+
+    try {
+        // Hashear la nueva contraseña
+        const passwordHashed = createHash(newPassword);
+
+        const result = await userService.updateUser(userFound._id, { password: passwordHashed });
+
+        // Verificar si se actualizó el documento
+        if (result.modifiedCount === 0) {
+            return res.status(400).send({ status: 'error', message: 'No se pudo actualizar la contraseña!' });
+        }
+
+        return res.status(200).send({ status: 'success', message: 'Contraseña actualizada con éxito!', data: result });
+    } catch (error) {
+        return res.status(500).send({ status: 'error', message: 'Error al actualizar la contraseña!', data: error.message });
+    }
+}
+
 async function GetData(req, res) {
     res.send('datos sensibles')
 }
@@ -76,5 +106,6 @@ export {
     PostRegister,
     PostLogin,
     GetLogout,
-    GetData
+    GetData,
+    PostChangePass
 }
