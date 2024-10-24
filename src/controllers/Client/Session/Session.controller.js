@@ -1,64 +1,32 @@
-import { sessionModel } from "../../../models/session.model.js"
 import { UserManagerMongo } from "../../../manager/Mongo/userManager.mongo.js"
-import { createHash, isValidPassword } from "../../../utils/bcrypt.js"
+import { createHash } from "../../../utils/bcrypt.js"
 
 const userService = new UserManagerMongo()
 
 async function PostRegister(req, res) {
-    const { first_name, last_name, user_name, email, password, phone } = req.body
+    res.status(200).send({ status: 'success', message: 'Registrado con exito!' })
+}
 
-    if (!user_name || !email || !password) {
-        return res.send('Nombre de usuario y email obligatorios!').status(400)
-    }
-
-    const userFound = await userService.getUser( {email} )
-
-    if (userFound) {
-        return res.status(401).send({status: 'error', error: 'El usuario ya existe'})
-    }
-    
-    try {
-        const newUser = {
-            first_name,
-            last_name,
-            user_name,
-            email,
-            password: createHash(password),
-            phone
-        }
-    
-        const response = await userService.createUser( newUser )
-
-        res.redirect('/login').status({ status: 'success', data: response })
-
-    } catch (error) {
-        console.error('Error en PostRegister', error)
-        res.status(500).send('Error regristando usuario')
-    }
+async function GetFailRegister(req, res) {
+    res.status(500).send({ status: 'error', message: 'Error en passport authenticate (fallo la estrategia del register)' })
 }
 
 async function PostLogin(req, res) {
-    const { user_name, password } = req.body
+    if (!req.user) return res.status(401).send({ status: 'error', message: 'Credenciales invalidas' })
 
-    const userFound = await userService.getUser({ user_name })
-
-    if ( !userFound ) {
-        return res.status(400).send({status:'error', message: 'el usuario no existe'})
+    req.session.user = {
+        user_name: req.user.user_name
     }
 
-    if ( userFound.user_name != user_name || !isValidPassword( password, userFound.password ) ) {
-        return res.status(401).send({status:'error', message: 'user name o password incorrectos'})
-    }
+    res.status(200).send({ status: 'success', message: 'Logeado con exito!' })
+}
 
-    try {     
-        req.session.user = {
-            user_name,
-            isAdmin: userFound.role === 'admin'
-        }
-        res.send('logeado correctamente')       
-    } catch (error) {
-        res.status(403).send({ message:'Error al logearse', data: {error} })
-    }
+async function GetFailLogin(req, res) {
+    res.status(500).send({ status: 'error', message: 'Error en passport authenticate (fallo la estrategia del login)' })
+}
+
+async function GetData(req, res) {
+    res.send('datos sensibles')
 }
 
 async function GetLogout(req, res) {
@@ -98,14 +66,12 @@ async function PostChangePass(req, res) {
     }
 }
 
-async function GetData(req, res) {
-    res.send('datos sensibles')
-}
-
 export {
     PostRegister,
+    GetFailRegister,
     PostLogin,
+    GetFailLogin,
+    PostChangePass,
     GetLogout,
-    GetData,
-    PostChangePass
+    GetData
 }
