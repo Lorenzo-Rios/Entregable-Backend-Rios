@@ -5,7 +5,7 @@ import { generateToken } from '../../../utils/jsonwebtoken.js'
 const userService = new UserManagerMongo()
 
 async function GetGithub(req, res) {
-    res.status(200).send('Ingresando mediante github')
+
 }
 
 async function GetGithubCallback(req, res) {
@@ -64,6 +64,12 @@ async function PostLogin(req, res) {
     }
 
     try {     
+        req.session.user = {
+            user_name: userFound.user_name,
+            role: userFound.role,
+            phone: userFound.phone
+        }
+
         const token = generateToken({ id: userFound._id, role: userFound.role })
 
         res.send({

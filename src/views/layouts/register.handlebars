@@ -1,15 +1,33 @@
-<main><br>
-    <form action="/api/session/register" method="POST" id="">
-        <h1>Registrate</h1>
-        <input type="text" name="first_name" placeholder="Ingrese su nombre"><br>
-        <input type="text" name="last_name" placeholder="Ingrese su apellido"><br>
-        <input type="text" name="user_name" placeholder="Ingrese su nombre de usuario" required><br>
-        <input type="email" name="email" placeholder="Ingrese su email" required><br>
-        <input type="password" name="password" placeholder="Ingrese su password" required><br>
-        <input type="text" name="phone" placeholder="Ingrese su numero de telefono"><br><br>
-        <button type="sumbit">Registrarse</button>
-        <label for="">Ya tienes cuenta?</label>
-        <a href="/login">Logeate</a>
+<main style="display: flex; justify-content:center; align-items: center; height: 100vh; background-color: #f0f2f5;">
+    <form action="/api/session/register" method="POST" style="background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 300px; text-align: center;">
+        <h1 style="font-family: Arial, sans-serif; color: #333;">
+            Registrate
+        </h1>
+        <input type="text" name="first_name" placeholder="Ingrese su nombre"
+            style="width: 100%; padding: 10px; margin: 10px 0; border-radius: 4px; border: 1px solid #ddd; font-size: 16px;"
+        >
+        <input type="text" name="last_name" placeholder="Ingrese su apellido"
+            style="width: 100%; padding: 10px; margin: 10px 0; border-radius: 4px; border: 1px solid #ddd; font-size: 16px;"
+        >
+        <input type="text" name="user_name" placeholder="Ingrese su nombre de usuario" required
+            style="width: 100%; padding: 10px; margin: 10px 0; border-radius: 4px; border: 1px solid #ddd; font-size: 16px;"
+        >
+        <input type="email" name="email" placeholder="Ingrese su email" required
+            style="width: 100%; padding: 10px; margin: 10px 0; border-radius: 4px; border: 1px solid #ddd; font-size: 16px;"
+        >
+        <input type="password" name="password" placeholder="Ingrese su password" required 
+            style="width: 100%; padding: 10px; margin: 10px 0; border-radius: 4px; border: 1px solid #ddd; font-size: 16px;"
+        >
+        <input type="text" name="phone" placeholder="Ingrese su numero de telefono"
+            style="width: 100%; padding: 10px; margin: 10px 0; border-radius: 4px; border: 1px solid #ddd; font-size: 16px;"
+        >
+        <button type="sumbit" style="width: 100%; padding: 10px; background-color: #007bff; color: #fff; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; margin-top: 10px;">
+            Registrarse
+        </button><br>
+        <a href="/login" style="color: #007bff; text-decoration: none; font-size: 14px; margin-top: 5px;">Logeate</a><br>
+        <a href="/api/session/github" style="display: inline-block; background-color: #f8f9fa; color: #343a40; border: 1px solid #343a40; width: 75%; padding: 10px; text-align: center; text-decoration: none; border-radius: 5px;">
+            Entrar con Github
+        </a>
     </form>
 </main>
 

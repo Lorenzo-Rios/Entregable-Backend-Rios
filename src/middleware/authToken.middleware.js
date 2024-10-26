@@ -14,8 +14,10 @@ const authTokenMiddleware = (req, res, next) => {
     const token = authHeader.split(' ')[1] 
 
     jwt.verify(token, PRIVATE_KEY, (error, userToken) => {
+
+        if(dataToken.role !== 'admin') return res.send('not authorized')
+
         req.user = userToken
-        
         next()
     })
 }
