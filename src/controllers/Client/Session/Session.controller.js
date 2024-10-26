@@ -5,7 +5,7 @@ import { generateToken } from '../../../utils/jsonwebtoken.js'
 const userService = new UserManagerMongo()
 
 async function GetGithub(req, res) {
-    
+    res.status(200).send('Ingresando mediante github')
 }
 
 async function GetGithubCallback(req, res) {
@@ -38,7 +38,7 @@ async function PostRegister(req, res) {
     
         const response = await userService.createUser( newUser )
 
-        res.redirect('/login').status({ status: 'success', data: response })
+        res.redirect('/login')
 
     } catch (error) {
         console.error('Error en PostRegister', error)

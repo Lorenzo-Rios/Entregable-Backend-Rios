@@ -1,14 +1,4 @@
 
 
-POST http://localhost:8080/api/user
-Content-Type: application/json
-
-{
-    "first_name": "Lorenzo",
-    "last_name": "Rios",
-    "user_name": "lolito_pincha",
-    "email": "lolo@gmail.com",
-    "password": "1234",
-    "phone": "2213123",
-    "role": "admin"
-}
+GET http://localhost:8080/api/session/current
+authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MTFiNDRjNGNiMTlhZTk1NzZjODc1MSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcyOTkxOTI3NywiZXhwIjoxNzMwMDA1Njc3fQ.GYlgNCLhGkeWojMFP_dNedpAGnKbiFeXLXWUxcZhkc4

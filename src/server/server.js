@@ -62,19 +62,6 @@ export default class Server {
         this.app.use(express.urlencoded({ extended: true }));
         this.app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
         this.app.use(cookieParser(process.env.PRIVATE_KEY))
-        // this.app.use(session({
-        //     store: MongoStore.create({
-        //         mongoUrl: process.env.MONGO_URL,
-        //         ttl: 1000
-        //     }),
-        //     secret: process.env.PRIVATE_KEY,
-        //     resave: true,
-        //     saveUninitialized: true
-        // }))
-
-        // initializePassport()
-        // this.app.use(passport.initialize())
-        // this.app.use(passport.session())
 
         this.app.use((req, res, next) => {
             req.io = this.io;

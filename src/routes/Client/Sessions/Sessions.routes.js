@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { authTokenMiddleware } from '../../../middleware/authToken.middleware'
+import { authTokenMiddleware } from '../../../middleware/authToken.middleware.js'
 import { GetGithub, GetGithubCallback, PostRegister, GetFailRegister, PostLogin, GetFailLogin, PostChangePass, GetLogout, GetData } from '../../../controllers/Client/Session/Session.controller.js'
 import passport from 'passport'
 

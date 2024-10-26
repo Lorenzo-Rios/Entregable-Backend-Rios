@@ -1,5 +1,7 @@
 import jwt from 'jsonwebtoken'
-import { PRIVATE_ KEY } from '../utils/jsonwebtoken.js'
+import 'dotenv/config'
+
+const PRIVATE_KEY = process.env.PRIVATE_KEY
 
 const authTokenMiddleware = (req, res, next) => {
     const authHeader = req.headers['authorization']
