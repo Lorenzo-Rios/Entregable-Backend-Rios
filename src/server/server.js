@@ -1,15 +1,15 @@
 /* Dependencies */
+import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
 import morgan from 'morgan'
 import { Server as socketIo } from 'socket.io'
 import { engine } from 'express-handlebars'
+import Handlebars from 'handlebars'
 import cookieParser from 'cookie-parser'
 import session from 'express-session'
-import Handlebars from 'handlebars'
 import FileStore from 'session-file-store'
 import MongoStore from 'connect-mongo'
-import 'dotenv/config'
 
 /* Access */
 import http from 'http'
@@ -62,19 +62,19 @@ export default class Server {
         this.app.use(express.urlencoded({ extended: true }));
         this.app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
         this.app.use(cookieParser(process.env.PRIVATE_KEY))
-        this.app.use(session({
-            store: MongoStore.create({
-                mongoUrl: process.env.MONGO_URL,
-                ttl: 1000
-            }),
-            secret: process.env.PRIVATE_KEY,
-            resave: true,
-            saveUninitialized: true
-        }))
+        // this.app.use(session({
+        //     store: MongoStore.create({
+        //         mongoUrl: process.env.MONGO_URL,
+        //         ttl: 1000
+        //     }),
+        //     secret: process.env.PRIVATE_KEY,
+        //     resave: true,
+        //     saveUninitialized: true
+        // }))
 
-        initializePassport()
-        this.app.use(passport.initialize())
-        this.app.use(passport.session())
+        // initializePassport()
+        // this.app.use(passport.initialize())
+        // this.app.use(passport.session())
 
         this.app.use((req, res, next) => {
             req.io = this.io;

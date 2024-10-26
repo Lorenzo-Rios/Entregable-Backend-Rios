@@ -1,17 +1,19 @@
 import { Router } from 'express'
-import { authentication } from '../../../middleware/auth.middleware.js'
-import { PostRegister, GetFailRegister, PostLogin, GetFailLogin, PostChangePass, GetLogout, GetData } from '../../../controllers/Client/Session/Session.controller.js'
+import { authTokenMiddleware } from '../../../middleware/authToken.middleware'
+import { GetGithub, GetGithubCallback, PostRegister, GetFailRegister, PostLogin, GetFailLogin, PostChangePass, GetLogout, GetData } from '../../../controllers/Client/Session/Session.controller.js'
 import passport from 'passport'
 
 const router = Router()
 
-router.post('/register', passport.authenticate('register', { failureRedirect: '/failregister' }), PostRegister)
+router.get('/github', passport.authenticate('github', { scope: ['user', 'user:email'] }), GetGithub)
+router.get('/githubcallback', passport.authenticate('github', { failureRedirect: '/login' }), GetGithubCallback)
+router.post('/register', PostRegister)
 router.get('/failregister', GetFailRegister)
-router.post('/login', passport.authenticate('login', { failureRedirect: '/failogin' }), PostLogin)
+router.post('/login', PostLogin)
 router.get('/failogin', GetFailLogin)
 router.post('/changepass', PostChangePass)
 router.get('/logout', GetLogout)
-router.get('/current', authentication, GetData)
+router.get('/current', authTokenMiddleware, GetData)
 //router.post('/newpassword', PostNewPassword)
 //router.post('/changepassword', PostChangePassword)
 

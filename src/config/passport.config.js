@@ -1,56 +1,38 @@
 import passport from 'passport'
 import { Strategy } from 'passport-local'
+import GithubStrategy from 'passport-github2'
 import { UserManagerMongo } from '../manager/Mongo/userManager.mongo.js'
-import { createHash, isValidPassword } from '../utils/bcrypt.js'
+import { createHash } from '../utils/bcrypt.js'
 
 const userService = new UserManagerMongo()
 
 const initializePassport = () => {
-    passport.use('register', new Strategy( {
-        passReqToCallback: true,
-        usernameField: 'user_name'
-    }, async (req, username, password, done) => {
-        const { first_name, last_name, email, phone } = req.body
 
-        if (!first_name || !email || !username || !password) {
-            return done(null, false)
-        }
-
-        const userFound = await userService.getUser({ user_name: username })
-
-        if(userFound) return done(null, false)
-        
+    passport.use('github', new GithubStrategy({
+        clientID: 'Iv23lioB2bE5KgEVhzlZ',
+        clientSecret: '29ca7d2a08df255c9b90a8e0cdc44ed45afc929e',
+        callbackURL: 'http://localhost:8080/api/session/githubcallback'
+    }, async (accessToken, refreshToken, profile, done) => {
         try {
-            let newUser = {
-                first_name,
-                last_name,
-                user_name: username,
-                email,
-                password: createHash(password),
-                phone
+            console.log(profile)
+
+            let user = await userService.getUser({ email: profile._json.email })
+
+            if(!user){
+                const newUser = {
+                    first_name: profile._json.name,
+                    user_name: profile.username,
+                    email: profile._json.email,
+                    password: createHash('1234')
+                }
+                let result = await userService.createUser(newUser)    
+                
+                return done(null, result)
             }
 
-            let result = await userService.createUser(newUser)
-
-            return done(null, result)
+            done(null, user)
         } catch (error) {
-            return done('Error al registrarse' +error )
-        }
-
-    }))
-    passport.use('login', new Strategy( {
-        usernameField: 'user_name'
-    }, async ( username, password, done) => {
-        try {
-            const userFound = await userService.getUser({ user_name: username })
-
-            if(!userFound) return done(null, false)
-
-            if(!isValidPassword(password, userFound.password)) return done(null, false)
-
-            return done(null, userFound)
-        } catch (error) {
-            return done('Error al logearse' +error)
+            return done(error)
         }
     }))
 
