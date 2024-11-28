@@ -51,37 +51,35 @@ async function GetFailRegister(req, res) {
 }
 
 async function PostLogin(req, res) {
-    const { user_name, password } = req.body
+    const { user_name, password } = req.body;
 
-    const userFound = await userService.getUser({ user_name })
+    const userFound = await userService.getUser({ user_name });
 
-    if ( !userFound ) {
-        return res.status(400).send({status:'error', message: 'el usuario no existe'})
+    if (!userFound) {
+        return res.status(400).send({ status: 'error', message: 'El usuario no existe' });
     }
 
-    if ( userFound.user_name != user_name || !isValidPassword( password, userFound.password ) ) {
-        return res.status(401).send({status:'error', message: 'user name o password incorrectos'})
+    if (!isValidPassword(password, userFound.password)) {
+        return res.status(401).send({ status: 'error', message: 'Nombre de usuario o contraseña incorrectos' });
     }
 
-    try {     
-        //req.session.user = {
-          //  user_name: userFound.user_name,
-          //  role: userFound.role,
-          //  phone: userFound.phone
-        //}
-
-        const token = generateToken({ id: userFound._id, role: userFound.role })
+    try {
+        const token = generateToken({ 
+            id: userFound._id, 
+            role: userFound.role,
+            user_name: userFound.user_name
+        });
 
         res.cookie('token', token, {
-            maxAge: 1000 * 60 * 60 * 24,
+            maxAge: 1000 * 60 * 60 * 24, // 1 día
             httpOnly: true
         }).send({
             status: 'success',
             data: userFound,
             token
-        })       
+        });
     } catch (error) {
-        res.status(403).send({ message:'Error al logearse', data: {error} })
+        res.status(500).send({ message: 'Error al iniciar sesión', error });
     }
 }
 
@@ -90,7 +88,7 @@ async function GetFailLogin(req, res) {
 }
 
 async function GetData(req, res) {
-    res.send('datos sensibles')
+    res.send({dataUser: req.user, message: 'datos sensibles'})
 }
 
 async function GetLogout(req, res) {

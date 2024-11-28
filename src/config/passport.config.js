@@ -1,12 +1,36 @@
 import passport from 'passport'
-import { Strategy } from 'passport-local'
 import GithubStrategy from 'passport-github2'
+import jwt from 'passport-jwt'
 import { UserManagerMongo } from '../manager/Mongo/userManager.mongo.js'
 import { createHash } from '../utils/bcrypt.js'
+import 'dotenv/config'
 
+const PRIVATE_KEY = process.env.PRIVATE_KEY
+const JWTStrategy = jwt.Strategy
+const ExtractJWT = jwt.ExtractJwt
 const userService = new UserManagerMongo()
 
 const initializePassport = () => {
+
+    const cookieExtractor = req => {
+        let token = null
+
+        if (req && req.cookies) {
+            token = req.cookies['token']
+        }
+        return token
+    }
+
+    passport.use('jwt', new JWTStrategy({
+        jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]),
+        secretOrKey: PRIVATE_KEY
+    }, async (jwt_payload, done) => {
+        try {
+            return done(null, jwt_payload)
+        } catch (error) {
+            return done(error)
+        }
+    }))
 
     passport.use('github', new GithubStrategy({
         clientID: 'Iv23lioB2bE5KgEVhzlZ',
