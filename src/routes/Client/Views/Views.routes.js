@@ -1,11 +1,12 @@
 import { Router } from 'express'
 import { renderMain, renderUser, renderChat, renderRealTimeProducts, renderCart, renderProducts , renderRegister, renderLogin, renderChangePass } from '../../../controllers/Client/View/View.controller.js'
-import { authTokenMiddleware } from '../../../middleware/authToken.middleware.js'
+import { userRoleMiddleware } from '../../../middleware/userRoleMiddleware.js'
+import passport from 'passport'
 
 const router = Router()
 
 router.get('/', renderMain)
-router.get('/chat', authTokenMiddleware, renderChat)
+router.get('/chat', passport.authenticate('jwt', {session: false}), userRoleMiddleware, renderChat)
 router.get('/realtimeproducts', renderRealTimeProducts)
 router.get('/user', renderUser)
 router.get('/cart', renderCart)

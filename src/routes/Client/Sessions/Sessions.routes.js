@@ -1,5 +1,6 @@
 import { Router } from 'express'
-import { roleMiddleware } from '../../../middleware/roleMiddleware.js'
+import { adminRoleMiddleware } from '../../../middleware/adminRoleMiddleware.js'
+import { passportCall } from '../../../passport/passportCall.js'
 import { GetGithub, GetGithubCallback, PostRegister, GetFailRegister, PostLogin, GetFailLogin, PostChangePass, GetLogout, GetData } from '../../../controllers/Client/Session/Session.controller.js'
 import passport from 'passport'
 
@@ -13,7 +14,7 @@ router.post('/login', PostLogin)
 router.get('/failogin', GetFailLogin)
 router.post('/changepass', PostChangePass)
 router.get('/logout', GetLogout)
-router.get('/current', passport.authenticate('jwt', {session: false}), roleMiddleware('admin'), GetData)
+router.get('/current', passportCall('jwt'), adminRoleMiddleware('admin'), GetData)
 //router.post('/newpassword', PostNewPassword)
 //router.post('/changepassword', PostChangePassword)
 
