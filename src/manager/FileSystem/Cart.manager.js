@@ -62,14 +62,26 @@ class CartManager {
         return cart;
     }
 
-    static async updateProductQuantity(cartId, productId, newQuantity) {
+    static async addProductToCart(cartId, productId, quantity) {
         const cart = await cartModel.findById(cartId);
+        const product = await productModel.findById(productId);
+    
         if (!cart) throw new Error('Cart not found');
-
-        const product = cart.products.find(p => p.product.toString() === productId);
-        if (!product) throw new Error('Product not found in cart');
-
-        product.quantity = newQuantity;
+        if (!product) throw new Error('Product not found');
+    
+        const existingProductIndex = cart.products.findIndex(p => p.product.toString() === productId);
+        
+        if (existingProductIndex >= 0) {
+            // Si el producto ya está en el carrito, reemplaza la cantidad
+            cart.products[existingProductIndex].quantity = quantity; // Cambiar a esta línea si reemplazas la cantidad
+        } else {
+            // Si no está, lo agrega al carrito
+            cart.products.push({
+                product: productId,
+                quantity: quantity
+            });
+        }
+    
         await cart.save();
         return cart;
     }

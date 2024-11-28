@@ -14,7 +14,7 @@ async function renderRealTimeProducts(req, res) {
 
 async function renderCart(req, res) {
     try {
-        const testCartId = '66f7728152336cfd1dc02873'
+        const testCartId = '66f7728452336cfd1dc02875'
         const cart = await cartModel.findById(testCartId).populate('products.product');
 
         if (!cart) {
@@ -22,14 +22,21 @@ async function renderCart(req, res) {
         }
 
         let cartTotal = 0;
-        cart.products.forEach(item => {
-            cartTotal += item.product.price * item.quantity;
-        });
 
-        res.render('cart', {
-            cart: cart,
-            cartTotal: cartTotal
-        });
+cart.products.forEach(item => {
+    if (item.product && item.product.price) {
+        cartTotal += item.product.price * item.quantity;
+    } else {
+        console.warn('Producto sin precio:', item);
+    }
+});
+
+console.log("Total calculado del carrito:", cartTotal);
+
+res.render('cart', {
+    cart: cart,
+    cartTotal: cartTotal
+});
 
     } catch (error) {
         console.error('Error en renderCart:', error);

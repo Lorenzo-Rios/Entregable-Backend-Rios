@@ -65,7 +65,6 @@ export default class Server {
 
         initializePassport()
         this.app.use(passport.initialize())
-        //this.app.use(passport.session())
 
         this.app.use((req, res, next) => {
             req.io = this.io;

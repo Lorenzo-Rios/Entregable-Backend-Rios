@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <!DOCTYPE html>
 <html lang="en">
@@ -7,9 +8,7 @@
     <title>Carrito</title>
 </head>
 <body style="font-family: Arial, sans-serif; background-color: #f5f5f5; color: #333; padding: 20px;">
-
     <h1 style="text-align: center; color: #007bff;">Carrito</h1>
-
     <ul id="cartProducts" style="list-style-type: none; padding: 0;">
         {{#each cart.products}}
         <li style="background-color: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); margin-bottom: 15px;">
@@ -18,7 +17,6 @@
             <strong>Precio:</strong> ${{this.product.price}} <br>
             <strong>Cantidad:</strong> {{this.quantity}} <br>
             <strong>Total por unidad:</strong> ${{multiply this.product.price this.quantity}} <br>
-
             <button onclick="removeFromCart('{{this.product._id}}')" 
                     style="margin-top: 10px; padding: 8px 12px; background-color: #dc3545; color: #fff; border: none; border-radius: 4px; cursor: pointer;">
                 Eliminar
@@ -26,9 +24,7 @@
         </li>
         {{/each}}
     </ul>
-
     <h3 style="color: #28a745;">Total a pagar: ${{cartTotal}}</h3>
-
     <form action="" id="form-user" style="margin-top: 20px; padding: 15px; background-color: #fff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
         <input type="text" id="nombre" name="nombre" placeholder="Ingrese su nombre" 
             style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px;">
@@ -45,15 +41,13 @@
             <option value="Mercado pago">Mercado Pago</option>
         </select>
     </form>
-
     <button onclick="placeOrder()" style="width: 100%; padding: 12px; background-color: #007bff; color: #fff; border: none; border-radius: 4px; cursor: pointer; margin-top: 15px;">
         Ordenar
     </button>
 
     <script>
-        const cartId = '66f7728152336cfd1dc02873'
+        const cartId = '66f7728452336cfd1dc02875'
         const cartProducts = document.getElementById('cartProducts');
-
         function removeFromCart(productId) {
             fetch(`/api/cart/${cartId}/products/${productId}`, {
                 method: 'DELETE'
@@ -66,13 +60,11 @@
                 }
             });
         }
-
         function placeOrder() {
             const nombre = document.getElementById('nombre').value
             const direccion = document.getElementById('direccion').value
             const telefono = document.getElementById('telefono').value
             const metodoDePago = document.getElementById('metodoDePago').value
-
             fetch('/api/order', {
                 method: 'POST',
                 headers: {
@@ -97,4 +89,3 @@
         }
     </script>
 </body>
-</html>

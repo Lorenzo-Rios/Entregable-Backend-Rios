@@ -64,15 +64,29 @@ async function PutProduct(req, res) {
         const { pid } = req.params;
         const productToReplace = req.body;
 
+        // Verificar que todos los campos requeridos estén presentes
         if (!productToReplace.tittle || !productToReplace.description || !productToReplace.stock || !productToReplace.price || !productToReplace.code) {
             return res.status(400).send({ status: 'error', error: 'Faltan completar los campos requeridos!' });
         }
 
+        // Verificar si el producto existe
+        const product = await productModel.findById(pid);
+        if (!product) {
+            return res.status(404).send({ status: 'error', error: 'Producto no encontrado' });
+        }
+
+        // Realizar la actualización
         const response = await productModel.updateOne({ _id: pid }, productToReplace);
-        res.status(200).send({ status: 'success', message: 'Producto actualizado con Exito!', data: response });
+        
+        // Verificar si se actualizó el producto
+        if (response.nModified === 0) {
+            return res.status(400).send({ status: 'error', error: 'No se actualizó ningún producto. Verifique los datos enviados.' });
+        }
+
+        res.status(200).send({ status: 'success', message: 'Producto actualizado con éxito!', data: response });
     } catch (error) {
         console.error('Error en PutProduct:', error);
-        res.status(500).send('Error updating products');
+        res.status(500).send('Error al actualizar el producto');
     }
 }
 
