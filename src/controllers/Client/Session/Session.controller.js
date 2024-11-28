@@ -64,15 +64,18 @@ async function PostLogin(req, res) {
     }
 
     try {     
-        req.session.user = {
-            user_name: userFound.user_name,
-            role: userFound.role,
-            phone: userFound.phone
-        }
+        //req.session.user = {
+          //  user_name: userFound.user_name,
+          //  role: userFound.role,
+          //  phone: userFound.phone
+        //}
 
         const token = generateToken({ id: userFound._id, role: userFound.role })
 
-        res.send({
+        res.cookie('token', token, {
+            maxAge: 1000 * 60 * 60 * 24,
+            httpOnly: true
+        }).send({
             status: 'success',
             data: userFound,
             token

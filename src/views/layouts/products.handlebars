@@ -25,6 +25,11 @@
             <button onclick="addToCart('{{this._id}}')" style="margin-top: 10px; padding: 8px 12px; background-color: #28a745; color: #fff; border: none; border-radius: 4px; cursor: pointer;">
                 Agregar al Carrito
             </button>
+
+            <!-- Botón para eliminar producto, solo para administradores -->
+            <button onclick="deleteProduct('{{this._id}}')" style="margin-top: 10px; padding: 8px 12px; background-color: #dc3545; color: #fff; border: none; border-radius: 4px; cursor: pointer;">
+                Eliminar Producto
+            </button>
         </li>
         {{/each}}
     </ul>
@@ -48,14 +53,14 @@
 
         function addToCart(productId) {
             console.log(productId);
-            const quantity = document.getElementById(`quantity-${productId}`).value; // Obtener la cantidad seleccionada
+            const quantity = document.getElementById(`quantity-${productId}`).value;
 
             fetch(`/api/cart/${cartId}/products/${productId}`, { 
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ quantity }) // Enviar la cantidad al carrito
+                body: JSON.stringify({ quantity })
             })
             .then(response => {
                 if (!response.ok) {
@@ -70,6 +75,33 @@
             .catch(error => {
                 console.error('Error al agregar el producto al carrito:', error);
                 alert('Error al agregar el producto al carrito');
+            });
+        }
+
+        function deleteProduct(productId) {
+            const token = localStorage.getItem('token'); // Obtener el token almacenado en localStorage
+
+            fetch(`/api/product/${productId}`, { 
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(data => { throw new Error(data.error || 'Error desconocido'); });
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Producto eliminado:', data);
+                alert('Producto eliminado correctamente');
+                location.reload(); // Recargar la página para actualizar la lista de productos
+            })
+            .catch(error => {
+                console.error('Error al eliminar el producto:', error);
+                alert('Error al eliminar el producto');
             });
         }
     </script>
