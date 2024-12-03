@@ -1,4 +1,4 @@
-import ProductManager from "../../../manager/FileSystem/Product.manajer.js";
+import ProductRepository from '../../../repositories/Product.repository.js';
 
 async function GetProduct(req, res) {
     try {
@@ -6,7 +6,7 @@ async function GetProduct(req, res) {
         const pageNumber = parseInt(page, 10);
         const limitNumber = parseInt(limit, 10);
 
-        const result = await ProductManager.getProducts(pageNumber, limitNumber);
+        const result = await ProductRepository.getProducts(pageNumber, limitNumber);
 
         if (!result.docs || result.docs.length === 0) {
             return res.status(404).send({
@@ -45,7 +45,7 @@ async function PostProduct(req, res) {
             return res.status(400).send({ status: 'error', error: 'Faltan completar los campos requeridos!' });
         }
 
-        const response = await ProductManager.createProduct(body);
+        const response = await ProductRepository.createProduct(body);
 
         res.status(200).send({ status: 'success', data: response });
     } catch (error) {
@@ -63,15 +63,15 @@ async function PutProduct(req, res) {
             return res.status(400).send({ status: 'error', error: 'Faltan completar los campos requeridos!' });
         }
 
-        const response = await ProductManager.updateProductById(pid, productToReplace);
+        const updatedProduct = await ProductRepository.updateProduct(pid, productToReplace);
 
-        if (response.nModified === 0) {
-            return res.status(400).send({ status: 'error', error: 'No se actualizó ningún producto. Verifique los datos enviados.' });
-        }
-
-        res.status(200).send({ status: 'success', message: 'Producto actualizado con éxito!', data: response });
+        res.status(200).send({ 
+            status: 'success', 
+            message: 'Producto actualizado con éxito!', 
+            data: updatedProduct 
+        });
     } catch (error) {
-        console.error('Error en PutProduct:', error);
+        console.error('Error en PutProduct:', error.message);
         res.status(500).send('Error al actualizar el producto');
     }
 }
@@ -80,12 +80,15 @@ async function DeleteProduct(req, res) {
     try {
         const { pid } = req.params;
 
-        await ProductManager.deleteProductById(pid);
+        await ProductRepository.deleteProduct(pid);
 
-        res.status(200).send({ status: 'success', message: 'Producto borrado con exito!' });
+        res.status(200).send({ status: 'success', message: 'Producto borrado con éxito!' });
     } catch (error) {
-        console.error('Error en DeleteProduct:', error);
-        res.status(500).send('Error deleting products');
+        console.error('Error en DeleteProduct:', error.message);
+        if (error.message === 'Producto no encontrado para eliminar') {
+            return res.status(404).send({ status: 'error', message: 'Producto no encontrado' });
+        }
+        res.status(500).send('Error al borrar el producto');
     }
 }
 
