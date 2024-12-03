@@ -1,5 +1,6 @@
 import { productModel } from '../../../models/product.model.js';
 import { cartModel } from '../../../models/cart.model.js'
+import { orderModel } from '../../../models/order.model.js';
 
 async function renderMain(req, res) {
     res.render('main')
@@ -41,6 +42,47 @@ res.render('cart', {
     } catch (error) {
         console.error('Error en renderCart:', error);
         res.status(500).send('Error al mostrar el carrito');
+    }
+}
+
+async function renderOrder(req, res) {
+    try {
+        const { page = 1, limit = 10 } = req.query;
+
+        // Convertir 'page' y 'limit' a enteros
+        const pageNumber = parseInt(page, 10) || 1;
+        const limitNumber = parseInt(limit, 10) || 10;
+
+        // Configuración de opciones para la paginación
+        const options = {
+            page: pageNumber,
+            limit: limitNumber,
+        };
+
+        const result = await orderModel.paginate({}, options);
+
+        if (!result.docs || result.docs.length === 0) {
+            return res.status(404).send({
+                status: 'error',
+                message: 'No orders found'
+            });
+        }
+
+        // Renderizar la vista de productos con los datos obtenidos de MongoDB
+        res.render('orders', {
+            products: result.docs,
+            totalPages: result.totalPages,
+            currentPage: result.page, 
+            prevPage: result.prevPage,
+            nextPage: result.nextPage,
+            hasPrevPage: result.hasPrevPage,
+            hasNextPage: result.hasNextPage,
+            prevLink: result.hasPrevPage ? `/orders?page=${result.prevPage}&limit=${limitNumber}` : null,
+            nextLink: result.hasNextPage ? `/orders?page=${result.nextPage}&limit=${limitNumber}` : null
+        });
+    } catch (error) {
+        console.error('Error en renderOrder:', error);
+        res.status(500).send('Error rendering products');
     }
 }
 
@@ -105,5 +147,6 @@ export{
     renderProducts,
     renderRegister,
     renderLogin,
+    renderOrder,
     renderChangePass
 }
