@@ -1,40 +1,35 @@
-import { productModel } from '../../../models/product.model.js';
+import ProductManager from "../../../manager/FileSystem/Product.manajer.js";
 
 async function GetProduct(req, res) {
     try {
         const { page = 1, limit = 10 } = req.query;
+        const pageNumber = parseInt(page, 10);
+        const limitNumber = parseInt(limit, 10);
 
-        const pageNumber = parseInt(page, 10) || 1;
-        const limitNumber = parseInt(limit, 10) || 10;
+        const result = await ProductManager.getProducts(pageNumber, limitNumber);
 
-        // Configuración de opciones para la paginación
-        const options = {
-            page: pageNumber,
-            limit: limitNumber,
-        };
-
-        // Aplicar paginación usando los valores de page y limit
-        const result = await productModel.paginate({}, options);
-
-        // Verifica si result.docs tiene productos y responde adecuadamente
         if (!result.docs || result.docs.length === 0) {
             return res.status(404).send({
                 status: 'error',
-                message: 'No products found'
+                message: 'No products found',
             });
         }
 
         res.send({
             status: 'success',
-            payload: result.docs,  
+            payload: result.docs,
             totalPages: result.totalPages,
-            currentPage: result.page, 
+            currentPage: result.page,
             prevPage: result.prevPage,
             nextPage: result.nextPage,
             hasPrevPage: result.hasPrevPage,
             hasNextPage: result.hasNextPage,
-            prevLink: result.hasPrevPage ? `/products?page=${result.prevPage}&limit=${limitNumber}` : null,
-            nextLink: result.hasNextPage ? `/products?page=${result.nextPage}&limit=${limitNumber}` : null
+            prevLink: result.hasPrevPage
+                ? `/products?page=${result.prevPage}&limit=${limitNumber}`
+                : null,
+            nextLink: result.hasNextPage
+                ? `/products?page=${result.nextPage}&limit=${limitNumber}`
+                : null,
         });
     } catch (error) {
         console.error('Error en GetProduct:', error);
@@ -50,8 +45,8 @@ async function PostProduct(req, res) {
             return res.status(400).send({ status: 'error', error: 'Faltan completar los campos requeridos!' });
         }
 
-        const response = await productModel.create(body);
-        
+        const response = await ProductManager.createProduct(body);
+
         res.status(200).send({ status: 'success', data: response });
     } catch (error) {
         console.error('Error en PostProduct:', error);
@@ -64,21 +59,12 @@ async function PutProduct(req, res) {
         const { pid } = req.params;
         const productToReplace = req.body;
 
-        // Verificar que todos los campos requeridos estén presentes
         if (!productToReplace.tittle || !productToReplace.description || !productToReplace.stock || !productToReplace.price || !productToReplace.code) {
             return res.status(400).send({ status: 'error', error: 'Faltan completar los campos requeridos!' });
         }
 
-        // Verificar si el producto existe
-        const product = await productModel.findById(pid);
-        if (!product) {
-            return res.status(404).send({ status: 'error', error: 'Producto no encontrado' });
-        }
+        const response = await ProductManager.updateProductById(pid, productToReplace);
 
-        // Realizar la actualización
-        const response = await productModel.updateOne({ _id: pid }, productToReplace);
-        
-        // Verificar si se actualizó el producto
         if (response.nModified === 0) {
             return res.status(400).send({ status: 'error', error: 'No se actualizó ningún producto. Verifique los datos enviados.' });
         }
@@ -93,8 +79,10 @@ async function PutProduct(req, res) {
 async function DeleteProduct(req, res) {
     try {
         const { pid } = req.params;
-        const response = await productModel.deleteOne({ _id: pid });
-        res.status(200).send({ status: 'success', message: 'Producto borrado con exito!', data: response });
+
+        await ProductManager.deleteProductById(pid);
+
+        res.status(200).send({ status: 'success', message: 'Producto borrado con exito!' });
     } catch (error) {
         console.error('Error en DeleteProduct:', error);
         res.status(500).send('Error deleting products');
@@ -105,5 +93,5 @@ export {
     GetProduct,
     PostProduct,
     PutProduct,
-    DeleteProduct
+    DeleteProduct,
 };
