@@ -44,10 +44,6 @@ res.render('cart', {
     }
 }
 
-async function renderUser( req, res ) {
-    res.render('user')
-}
-
 async function renderProducts(req, res) {
     try {
         const { page = 1, limit = 10 } = req.query;
@@ -106,7 +102,6 @@ export{
     renderChat,
     renderRealTimeProducts,
     renderCart,
-    renderUser,
     renderProducts,
     renderRegister,
     renderLogin,
