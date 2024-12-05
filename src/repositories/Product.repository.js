@@ -1,6 +1,7 @@
-import ProductDAO from '../dao/Product.dao.js';
+import ProductDAO from '../mongo/Product.dao.js';
 
 const ProductRepository = {
+    // Métodos existentes...
     getProducts: async (page, limit) => {
         const options = { page, limit, lean: true };
         return await ProductDAO.getProducts(options);
@@ -21,6 +22,14 @@ const ProductRepository = {
             throw new Error('Producto no encontrado para eliminar');
         }
         return deletedProduct;
+    },
+    // Nuevo método
+    getProductById: async (productId) => {
+        const product = await ProductDAO.getProductById(productId);
+        if (!product) {
+            throw new Error('Producto no encontrado');
+        }
+        return product;
     },
 };
 

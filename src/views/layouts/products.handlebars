@@ -85,31 +85,33 @@
         const cartId = '66f7728452336cfd1dc02875'; 
 
         function addToCart(productId) {
-            console.log(productId);
-            const quantity = document.getElementById(`quantity-${productId}`).value;
+    console.log(productId);
+    const quantity = document.getElementById(`quantity-${productId}`).value;
+    const token = localStorage.getItem('token'); // Obtener el token almacenado en localStorage
 
-            fetch(`/api/cart/${cartId}/products/${productId}`, { 
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ quantity })
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('Producto agregado al carrito:', data);
+    fetch(`/api/cart/${cartId}/products/${productId}`, { 
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`  // Enviar el token en la cabecera
+        },
+        body: JSON.stringify({ quantity })
+    })
+    .then(response => {
+    if (!response.ok) {
+        return response.json().then(data => { throw new Error(data.error || 'Error desconocido'); });
+    }
+    return response.json();
+})
+.then(data => {
+                console.log('Producto agregado:', data);
                 alert('Producto agregado al carrito');
             })
-            .catch(error => {
-                console.error('Error al agregar el producto al carrito:', error);
-                alert('Error al agregar el producto al carrito');
-            });
-        }
+.catch(error => {
+    console.error('Error:', error);
+    alert('Error: ' + error.message);  // Aquí manejarás el error con el mensaje que ahora es más claro
+});
+}
 
         function deleteProduct(productId) {
             const token = localStorage.getItem('token'); // Obtener el token almacenado en localStorage
@@ -134,7 +136,7 @@
             })
             .catch(error => {
                 console.error('Error al eliminar el producto:', error);
-                alert('Error al eliminar el producto');
+                alert('Error:' + error.message);
             });
         }
 

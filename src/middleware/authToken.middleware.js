@@ -5,23 +5,28 @@ const PRIVATE_KEY = process.env.PRIVATE_KEY;
 
 const authTokenMiddleware = (req, res, next) => {
     const authHeader = req.headers['authorization'];
-    
+
     if (!authHeader) {
-        return res.redirect('/login'); // Redirige a la página de login si no está autenticado
+        return res.status(401).render('error', {
+            message: 'No estás autenticado. Por favor, inicia sesión.',
+            link: '/login',
+        });
     }
 
     const token = authHeader.split(' ')[1];
 
     jwt.verify(token, PRIVATE_KEY, (error, userToken) => {
-        if (error || userToken.role !== 'admin') {
-            return res.status(403).send('Not authorized'); // Mensaje de error si no es admin
+        if (error) {
+            return res.status(403).render('error', {
+                message: 'Token inválido o expirado. Por favor, inicia sesión nuevamente.',
+                link: '/login',
+            });
         }
-        
+
+        // Guarda el usuario decodificado en la solicitud
         req.user = userToken;
         next();
     });
 };
 
-export { 
-    authTokenMiddleware 
-}
+export { authTokenMiddleware };

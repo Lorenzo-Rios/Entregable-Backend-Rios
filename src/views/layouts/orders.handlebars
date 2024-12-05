@@ -78,7 +78,7 @@
         function deleteOrder(orderId) {
             const token = localStorage.getItem('token'); // Obtener el token almacenado en localStorage
 
-            fetch(`/api/product/${orderId}`, { 
+            fetch(`/api/order/${orderId}`, { 
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -119,7 +119,7 @@
 
             const productData = { tittle, description, price, stock, code };
 
-            fetch(`/api/product/${orderId}`, {
+            fetch(`/api/order/${orderId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

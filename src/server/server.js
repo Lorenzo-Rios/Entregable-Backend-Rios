@@ -7,9 +7,6 @@ import { Server as socketIo } from 'socket.io'
 import { engine } from 'express-handlebars'
 import Handlebars from 'handlebars'
 import cookieParser from 'cookie-parser'
-import session from 'express-session'
-import FileStore from 'session-file-store'
-import MongoStore from 'connect-mongo'
 
 /* Access */
 import http from 'http'
@@ -22,10 +19,10 @@ import passport from 'passport'
 import ProductRoute from '../routes/Client/Products/Products.routes.js'
 import CartRoute from '../routes/Client/Carts/Carts.routes.js'
 import ViewRoute from '../routes/Client/Views/Views.routes.js'
-import UserRoute from '../routes/Client/Users/Users.routes.js'
 import OrderRoute from '../routes/Client/Orders/Orders.routes.js'
 import PruebaRoute from '../routes/Client/Pruebas/Pruebas.routes.js'
 import SessionRoute from '../routes/Client/Sessions/Sessions.routes.js'
+import { UserRoute } from '../routes/Client/UserClass/UserClass.routes.js'
 
 /* DB */
 import db from './connection.db.js'
@@ -113,12 +110,13 @@ export default class Server {
     }
 
     router () {
+        const userRoute = new UserRoute()
         this.app.use('/', ViewRoute);
         this.app.use(this.apiPaht.prueba, PruebaRoute);
         this.app.use(this.apiPaht.session, SessionRoute);
         this.app.use(this.apiPaht.product, ProductRoute);
         this.app.use(this.apiPaht.cart, CartRoute);
-        this.app.use(this.apiPaht.user, UserRoute);
+        this.app.use(this.apiPaht.user, userRoute.getRouter());
         this.app.use(this.apiPaht.order, OrderRoute);
     }
 

@@ -1,11 +1,20 @@
 import { RouterClass } from '../RouterClass/RouterClass.routes.js'
 
-export default class UserRouter extends RouterClass {
+class UserRoute extends RouterClass {
 
 
     init() {
-        this.get('/', (req, res) => {
-            res.send('Get Users')
+        this.get('/', ['user'], async (req, res) => {
+            try {
+                res.sendSuccess('datos sensibles')
+                
+            } catch (error) {
+                res.sendServerError(error)
+            }
         })
     }
+}
+
+export {
+    UserRoute
 }

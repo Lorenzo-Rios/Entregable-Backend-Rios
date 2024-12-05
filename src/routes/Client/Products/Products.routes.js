@@ -3,6 +3,7 @@ import { GetProduct, PostProduct, PutProduct, DeleteProduct } from '../../../con
 import { passportCall } from '../../../passport/passportCall.js';
 import { authorization } from '../../../middleware/authorization.middleware.js';
 
+
 const router = Router();
 
 router.get('/', GetProduct);

@@ -1,11 +1,11 @@
-import CartManager from '../../../manager/FileSystem/Cart.manager.js';
+import CartDao from '../../../mongo/Cart.dao.js';
 
 class CartController {
     // Obtener un carrito por ID
     static async getCart(req, res) {
         try {
             const { cid } = req.params
-            const cart = await CartManager.getCartById(cid);
+            const cart = await CartDao.getCartById(cid);
             res.send(cart);
         } catch (error) {
             res.status(500).send({ error: error.message });
@@ -18,7 +18,7 @@ class CartController {
             const { cid, pid } = req.params;
             const { quantity } = req.body;
 
-            const cart = await CartManager.addProductToCart(cid, pid, quantity);
+            const cart = await CartDao.addProductToCart(cid, pid, quantity);
             res.send(cart);
         } catch (error) {
             res.status(500).send({ error: error.message });
@@ -31,7 +31,7 @@ class CartController {
             const { cid } = req.params  // ID fijo del carrito
             const { products } = req.body;
 
-            const cart = await CartManager.updateCart(cid, products);
+            const cart = await CartDao.updateCart(cid, products);
             res.send(cart);
         } catch (error) {
             res.status(500).send({ error: error.message });
@@ -43,7 +43,7 @@ class CartController {
         try {
             const { cid, pid } = req.params;
 
-            const cart = await CartManager.removeProductFromCart(cid, pid);
+            const cart = await CartDao.removeProductFromCart(cid, pid);
             res.send(cart);
         } catch (error) {
             res.status(500).send({ error: error.message });
@@ -54,7 +54,7 @@ class CartController {
     static async clearCart(req, res) {
         try {
             const { cid } = req.params
-            const cart = await CartManager.clearCart(cid);
+            const cart = await CartDao.clearCart(cid);
             res.send(cart);
         } catch (error) {
             res.status(500).send({ error: error.message });
@@ -70,7 +70,7 @@ class CartController {
                 return res.status(400).send({ error: 'Quantity must be a positive number' });
             }
 
-            const cart = await CartManager.updateProductQuantity(cid, pid, quantity);
+            const cart = await CartDao.updateProductQuantity(cid, pid, quantity);
             res.send(cart);
         } catch (error) {
             res.status(500).send({ error: error.message });
