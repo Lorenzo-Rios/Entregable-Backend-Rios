@@ -1,9 +1,7 @@
 import jwt from 'jsonwebtoken'
-import 'dotenv/config'
+import { configObjet } from '../server/connection.db.js'
 
-const PRIVATE_KEY = process.env.PRIVATE_KEY
-
-const generateToken = user => jwt.sign(user, PRIVATE_KEY, {expiresIn: '1d'})
+const generateToken = user => jwt.sign(user, configObjet.private_key, {expiresIn: '1d'})
 
 export {
     generateToken

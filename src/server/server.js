@@ -25,14 +25,14 @@ import SessionRoute from '../routes/Client/Sessions/Sessions.routes.js'
 import { UserRoute } from '../routes/Client/UserClass/UserClass.routes.js'
 
 /* DB */
-import db from './connection.db.js'
+import db, { configObjet } from './connection.db.js'
 
 export default class Server {
     constructor () {
         this.app = express();
         this.server = http.createServer(this.app);
         this.io = new socketIo(this.server);
-        this.port = process.env.SERVER_PORT || 8080;
+        this.port = configObjet.port
         this.apiPaht = {
             product: '/api/product',
             user: '/api/user',
@@ -58,7 +58,7 @@ export default class Server {
         this.app.use(express.json({ limit: '50mb' }));     
         this.app.use(express.urlencoded({ extended: true }));
         this.app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-        this.app.use(cookieParser(process.env.PRIVATE_KEY))
+        this.app.use(cookieParser(configObjet.private_key))
 
         initializePassport()
         this.app.use(passport.initialize())

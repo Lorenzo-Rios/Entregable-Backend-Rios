@@ -1,7 +1,5 @@
 import jwt from 'jsonwebtoken';
-import 'dotenv/config';
-
-const PRIVATE_KEY = process.env.PRIVATE_KEY;
+import { configObjet } from '../server/connection.db.js'
 
 const authTokenMiddleware = (req, res, next) => {
     const authHeader = req.headers['authorization'];
@@ -15,7 +13,7 @@ const authTokenMiddleware = (req, res, next) => {
 
     const token = authHeader.split(' ')[1];
 
-    jwt.verify(token, PRIVATE_KEY, (error, userToken) => {
+    jwt.verify(token, configObjet.private_key, (error, userToken) => {
         if (error) {
             return res.status(403).render('error', {
                 message: 'Token inválido o expirado. Por favor, inicia sesión nuevamente.',

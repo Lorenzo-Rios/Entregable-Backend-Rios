@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import 'dotenv/config'
+import { configObjet } from '../../../server/connection.db.js'
 
 class RouterClass {
     constructor() {
@@ -39,7 +39,7 @@ class RouterClass {
         if(!authHeaders) return res.status(401).send({status: 'error', error: 'not permisions'})
         
         let token = authHeaders.split(' ')[1]
-        let user = jwt.verify(token, process.env.PRIVATE_KEY) 
+        let user = jwt.verify(token, configObjet.private_key) 
 
         if(!policies.includes(user.role.toUpperCase())) return res.status(401).send({status: 'error', error: 'not permisions'})
 

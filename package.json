@@ -5,7 +5,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node ./src/index.js",
+    "start": "node ./src/index.js --mode production",
+    "dev": "node --watch ./src/index.js --mode development",
+    "start:dev": "nodemon ./src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
