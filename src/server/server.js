@@ -1,5 +1,4 @@
 /* Dependencies */
-import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
 import morgan from 'morgan'
@@ -74,6 +73,9 @@ export default class Server {
     }
 
     viewEngine () {
+        Handlebars.registerHelper('eq', function (a, b) {
+            return a === b;
+        });
         Handlebars.registerHelper('multiply', function(a, b) {
             return a * b;
         });

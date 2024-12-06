@@ -49,14 +49,14 @@ async function renderOrder(req, res) {
     try {
         const { page = 1, limit = 10 } = req.query;
 
-        // Convertir 'page' y 'limit' a enteros
-        const pageNumber = parseInt(page, 10) || 1;
-        const limitNumber = parseInt(limit, 10) || 10;
-
         // Configuración de opciones para la paginación
         const options = {
-            page: pageNumber,
-            limit: limitNumber,
+            page: parseInt(page, 10) || 1,
+            limit: parseInt(limit, 10) || 10,
+            populate: {
+                path: 'cart.products.product',
+                select: 'tittle price' // Selecciona solo los campos necesarios
+            }
         };
 
         const result = await orderModel.paginate({}, options);
@@ -68,21 +68,20 @@ async function renderOrder(req, res) {
             });
         }
 
-        // Renderizar la vista de productos con los datos obtenidos de MongoDB
         res.render('orders', {
-            products: result.docs,
+            orders: result.docs,
             totalPages: result.totalPages,
             currentPage: result.page, 
             prevPage: result.prevPage,
             nextPage: result.nextPage,
             hasPrevPage: result.hasPrevPage,
             hasNextPage: result.hasNextPage,
-            prevLink: result.hasPrevPage ? `/orders?page=${result.prevPage}&limit=${limitNumber}` : null,
-            nextLink: result.hasNextPage ? `/orders?page=${result.nextPage}&limit=${limitNumber}` : null
+            prevLink: result.hasPrevPage ? `/orders?page=${result.prevPage}&limit=${limit}` : null,
+            nextLink: result.hasNextPage ? `/orders?page=${result.nextPage}&limit=${limit}` : null
         });
     } catch (error) {
         console.error('Error en renderOrder:', error);
-        res.status(500).send('Error rendering products');
+        res.status(500).send('Error rendering orders');
     }
 }
 

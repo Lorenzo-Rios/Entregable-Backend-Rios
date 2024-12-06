@@ -11,16 +11,21 @@
     <ul style="list-style-type: none; padding: 0;">
         {{#each orders}}
         <li style="background-color: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); margin-bottom: 20px;">
-            <strong>Usuario:</strong> {{this.user.nombre}} <br>
-            <strong>Direccion:</strong> {{this.user.direccion}} <br>
-            <strong>Telefono:</strong> ${{this.user.telefono}} <br>
-            <strong>Metodo de pago:</strong> {{this.metodoDePago}} <br>
-            <strong>Precio:</strong> ${{this.cart.total}} <br>
-            <strong>Productos:</strong> {{this.cart.products}} <br>
-            <strong>Estado de la orden:</strong> {{this.estado}} <br>
+            <strong>Usuario:</strong> <span id="user-nombre-{{this._id}}">{{this.user.nombre}}</span> <br>
+            <strong>Direccion:</strong> <span id="user-direccion-{{this._id}}">{{this.user.direccion}}</span> <br>
+            <strong>Telefono:</strong> <span id="user-telefono-{{this._id}}">{{this.user.telefono}}</span> <br>
+            <strong>Metodo de pago:</strong> <span id="metodo-pago-{{this._id}}">{{this.metodoDePago}}</span> <br>
+            <strong>Total:</strong> <span id="total-{{this._id}}">${{this.cart.total}}</span> <br>
+            <strong>Productos:</strong>
+        <ul>
+            {{#each this.cart.products}}
+                <li>Nombre: {{this.product.tittle}} - Cantidad: {{this.quantity}} - Precio: ${{this.product.price}}</li>
+            {{/each}}
+        </ul> <br>
+            <strong>Estado de la orden:</strong><span id="metodo-pago-{{this._id}}">{{this.estado}}</span> <br>
 
             <!-- Botón para eliminar producto, solo para administradores -->
-            <button onclick="deleteProduct('{{this._id}}')" style="margin-top: 10px; padding: 8px 12px; background-color: #dc3545; color: #fff; border: none; border-radius: 4px; cursor: pointer;">
+            <button onclick="deleteOrder('{{this._id}}')" style="margin-top: 10px; padding: 8px 12px; background-color: #dc3545; color: #fff; border: none; border-radius: 4px; cursor: pointer;">
                 Eliminar orden
             </button>
 
@@ -30,32 +35,53 @@
             </button>
 
         <!-- Formulario para actualizar producto (oculto por defecto) -->
-            <form id="update-form-{{this._id}}" onsubmit="updateProduct('{{this._id}}'); return false;" style="display: none; margin-top: 10px; padding: 15px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9;">
-                <h3 style="margin-top: 0; margin-bottom: 10px; color: #007bff;">Modificar orden</h3>
-                <div style="display: flex; flex-direction: column; gap: 10px;">
-                    <label for="tittle-{{this._id}}" style="font-weight: bold;">Nombre:</label>
-                    <input type="text" id="tittle-{{this._id}}" value="{{this.user.nombre}}" required
-                        style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+            <form id="update-form-{{this._id}}" onsubmit="updateOrder('{{this._id}}'); return false;" style="display: none; margin-top: 10px; padding: 15px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9;">
+    <h3 style="margin-top: 0; margin-bottom: 10px; color: #007bff;">Modificar orden</h3>
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+        <label for="tittle-{{this._id}}" style="font-weight: bold;">Nombre:</label>
+        <input type="text" id="tittle-{{this._id}}" value="{{this.user.nombre}}" required
+            style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
 
-                    <label for="description-{{this._id}}" style="font-weight: bold;">Direccion:</label>
-                    <input type="text" id="description-{{this._id}}" value="{{this.user.direccion}}" required
-                        style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+        <label for="description-{{this._id}}" style="font-weight: bold;">Direccion:</label>
+        <input type="text" id="description-{{this._id}}" value="{{this.user.direccion}}" required
+            style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
 
-                    <label for="stock-{{this._id}}" style="font-weight: bold;">Telefono:</label>
-                    <input type="number" id="stock-{{this._id}}" value="{{this.user.telefono}}" required
-                        style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+        <label for="stock-{{this._id}}" style="font-weight: bold;">Telefono:</label>
+        <input type="number" id="stock-{{this._id}}" value="{{this.user.telefono}}" required
+            style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
 
-                    <label for="price-{{this._id}}" style="font-weight: bold;">Precio:</label>
-                    <input type="number" id="price-{{this._id}}" value="{{this.cart.total}}" required
-                        style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+        <label for="price-{{this._id}}" style="font-weight: bold;">Precio total:</label>
+        <input type="number" id="price-{{this._id}}" value="{{this.cart.total}}" required
+            style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
 
-                    <label for="code-{{this._id}}" style="font-weight: bold;">Estado:</label>
-                    <input type="text" id="code-{{this._id}}" value="{{this.estado}}" required
-                        style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+        <label for="code-{{this._id}}" style="font-weight: bold;">Estado:</label>
+        <input type="text" id="code-{{this._id}}" value="{{this.estado}}" required
+            style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
 
-                    <button type="submit" style="margin-top: 10px; padding: 10px 15px; background-color: #28a745; color: #fff; border: none; border-radius: 4px; cursor: pointer;">Actualizar Producto</button>
-                </div>
-            </form>
+        <!-- Agregar productos -->
+        <label style="font-weight: bold;">Productos:</label>
+        {{#each this.cart.products}}
+            <div style="margin-bottom: 10px;">
+                <strong>Producto: </strong> {{this.product.tittle}} <br>
+                <label for="product-quantity-{{this.product._id}}" style="font-weight: bold;">Cantidad:</label>
+                <input type="number" id="product-quantity-{{this.product._id}}" value="{{this.quantity}}" required
+                    style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+
+                <label for="product-price-{{this.product._id}}" style="font-weight: bold;">Precio:</label>
+                <input type="number" id="product-price-{{this.product._id}}" value="{{this.product.price}}" required
+                    style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+            </div>
+        {{/each}}
+
+        <label for="metodoDePago-{{this._id}}" style="font-weight: bold;">Método de pago:</label>
+        <select id="metodoDePago-{{this._id}}" required style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+            <option value="Efectivo" {{#if (eq this.metodoDePago 'Efectivo')}}selected{{/if}}>Efectivo</option>
+            <option value="Mercado pago" {{#if (eq this.metodoDePago 'Mercado pago')}}selected{{/if}}>Mercado pago</option>
+        </select>
+
+        <button type="submit" style="margin-top: 10px; padding: 10px 15px; background-color: #28a745; color: #fff; border: none; border-radius: 4px; cursor: pointer;">Actualizar Orden</button>
+    </div>
+</form>
             </li>
         {{/each}}
     </ul>
@@ -108,23 +134,28 @@
         }
 
         function updateOrder(orderId) {
-            // Obtener los valores del formulario de actualización
-            const estado = document.getElementById(`tittle-${orderId}`).value;
+            const nombre = document.getElementById(`user-nombre-${orderId}`).textContent;
+            const direccion = document.getElementById(`user-direccion-${orderId}`).textContent;
+            const telefono = document.getElementById(`user-telefono-${orderId}`).textContent;
+            const metodoDePago = document.getElementById(`metodo-pago-${orderId}`).textContent;
+            const total = parseFloat(document.getElementById(`total-${orderId}`).textContent.replace('$', ''));
+            const estado = document.getElementById(`estado-${orderId}`).textContent;
 
+            console.log(nombre, direccion, telefono, metodoDePago, total, estado);
             // Verificar que todos los campos estén completos
-            if (!tittle || !description || !price || !stock || !code) {
+            if (!nombre || !direccion || !telefono || !metodoDePago || !total || !estado) {
                 alert('Todos los campos son requeridos');
                 return;
             }
 
-            const productData = { tittle, description, price, stock, code };
+            const orderData = { nombre, direccion, telefono, metodoDePago, total, estado };
 
             fetch(`/api/order/${orderId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(productData)
+                body: JSON.stringify(orderData)
             })
             .then(response => {
                 if (!response.ok) {
