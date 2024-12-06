@@ -35,52 +35,31 @@
             </button>
 
         <!-- Formulario para actualizar producto (oculto por defecto) -->
-            <form id="update-form-{{this._id}}" onsubmit="updateOrder('{{this._id}}'); return false;" style="display: none; margin-top: 10px; padding: 15px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9;">
-    <h3 style="margin-top: 0; margin-bottom: 10px; color: #007bff;">Modificar orden</h3>
-    <div style="display: flex; flex-direction: column; gap: 10px;">
-        <label for="tittle-{{this._id}}" style="font-weight: bold;">Nombre:</label>
-        <input type="text" id="tittle-{{this._id}}" value="{{this.user.nombre}}" required
-            style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+            <form id="update-form-{{this._id}}" style="max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+    <h2 style="text-align: center; color: #333;">Actualizar Orden</h2>
 
-        <label for="description-{{this._id}}" style="font-weight: bold;">Direccion:</label>
-        <input type="text" id="description-{{this._id}}" value="{{this.user.direccion}}" required
-            style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+    <label for="estado-{{this._id}}" style="font-weight: bold; margin-bottom: 5px;">Estado:</label>
+<select id="estado-{{this._id}}" required style="width: 100%; padding: 10px; margin: 5px 0 15px; border: 1px solid #ccc; border-radius: 4px;">
+    <option value="Pendiente" {{#if (eq this.estado 'Pendiente')}}selected{{/if}}>Pendiente</option>
+    <option value="En camino" {{#if (eq this.estado 'En camino')}}selected{{/if}}>En camino</option>
+    <option value="Realizada" {{#if (eq this.estado 'Realizada')}}selected{{/if}}>Realizada</option>
+    <option value="Cancelada" {{#if (eq this.estado 'Cancelada')}}selected{{/if}}>Cancelada</option>
+</select>
+<!-- Muestra el color según el estado -->
+<span style="
+    display: inline-block;
+    margin-top: 5px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-weight: bold;
+    color: {{#if (eq this.estado 'Pendiente')}}black{{else if (eq this.estado 'En camino')}}white{{else if (eq this.estado 'Realizada')}}white{{else}}white{{/if}};
+    background-color: {{#if (eq this.estado 'Pendiente')}}yellow{{else if (eq this.estado 'En camino')}}blue{{else if (eq this.estado 'Realizada')}}green{{else}}red{{/if}};
+">
+    {{this.estado}}
+</span>
 
-        <label for="stock-{{this._id}}" style="font-weight: bold;">Telefono:</label>
-        <input type="number" id="stock-{{this._id}}" value="{{this.user.telefono}}" required
-            style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
 
-        <label for="price-{{this._id}}" style="font-weight: bold;">Precio total:</label>
-        <input type="number" id="price-{{this._id}}" value="{{this.cart.total}}" required
-            style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
-
-        <label for="code-{{this._id}}" style="font-weight: bold;">Estado:</label>
-        <input type="text" id="code-{{this._id}}" value="{{this.estado}}" required
-            style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
-
-        <!-- Agregar productos -->
-        <label style="font-weight: bold;">Productos:</label>
-        {{#each this.cart.products}}
-            <div style="margin-bottom: 10px;">
-                <strong>Producto: </strong> {{this.product.tittle}} <br>
-                <label for="product-quantity-{{this.product._id}}" style="font-weight: bold;">Cantidad:</label>
-                <input type="number" id="product-quantity-{{this.product._id}}" value="{{this.quantity}}" required
-                    style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
-
-                <label for="product-price-{{this.product._id}}" style="font-weight: bold;">Precio:</label>
-                <input type="number" id="product-price-{{this.product._id}}" value="{{this.product.price}}" required
-                    style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
-            </div>
-        {{/each}}
-
-        <label for="metodoDePago-{{this._id}}" style="font-weight: bold;">Método de pago:</label>
-        <select id="metodoDePago-{{this._id}}" required style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
-            <option value="Efectivo" {{#if (eq this.metodoDePago 'Efectivo')}}selected{{/if}}>Efectivo</option>
-            <option value="Mercado pago" {{#if (eq this.metodoDePago 'Mercado pago')}}selected{{/if}}>Mercado pago</option>
-        </select>
-
-        <button type="submit" style="margin-top: 10px; padding: 10px 15px; background-color: #28a745; color: #fff; border: none; border-radius: 4px; cursor: pointer;">Actualizar Orden</button>
-    </div>
+    <button type="button" onclick="updateOrder('{{this._id}}')" style="margin-top: 20px; padding: 12px 18px; background-color: #28a745; color: #fff; border: none; border-radius: 4px; cursor: pointer; width: 100%; font-size: 16px;">Actualizar Orden</button>
 </form>
             </li>
         {{/each}}
@@ -134,45 +113,36 @@
         }
 
         function updateOrder(orderId) {
-            const nombre = document.getElementById(`user-nombre-${orderId}`).textContent;
-            const direccion = document.getElementById(`user-direccion-${orderId}`).textContent;
-            const telefono = document.getElementById(`user-telefono-${orderId}`).textContent;
-            const metodoDePago = document.getElementById(`metodo-pago-${orderId}`).textContent;
-            const total = parseFloat(document.getElementById(`total-${orderId}`).textContent.replace('$', ''));
-            const estado = document.getElementById(`estado-${orderId}`).textContent;
+    const estado = document.getElementById(`estado-${orderId}`).value;
 
-            console.log(nombre, direccion, telefono, metodoDePago, total, estado);
-            // Verificar que todos los campos estén completos
-            if (!nombre || !direccion || !telefono || !metodoDePago || !total || !estado) {
-                alert('Todos los campos son requeridos');
-                return;
+    // Crear objeto de datos
+    const orderData = {
+        estado
+    };
+
+    // Enviar al backend
+    fetch(`/api/order/${orderId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(orderData)
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al actualizar la orden.');
             }
-
-            const orderData = { nombre, direccion, telefono, metodoDePago, total, estado };
-
-            fetch(`/api/order/${orderId}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(orderData)
-            })
-            .then(response => {
-                if (!response.ok) {
-                    return response.json().then(data => { throw new Error(data.error || 'Error desconocido'); });
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('Producto actualizado:', data);
-                alert('Producto actualizado con éxito');
-                location.reload();  // Recargar la página
-            })
-            .catch(error => {
-                console.error('Error al actualizar el producto:', error);
-                alert('Error al actualizar el producto: ' + error.message);
-            });
-        }
+            return response.json();
+        })
+        .then(data => {
+            alert('Orden actualizada exitosamente.');
+            location.reload();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('No se pudo actualizar la orden.');
+        });
+}   
     </script>
 </body>
 </html>

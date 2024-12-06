@@ -50,21 +50,37 @@ async function PostOrder(req, res) {
     }
 }
 
-async function PutOrder ( req, res ) {
+async function PutOrder(req, res) {
     try {
-        const { oid } = req.params
+        console.log('Datos recibidos en el controlador:', req.body);
+        const { oid } = req.params; // ID de la orden
+        const orderToReplace = req.body; // Datos nuevos para la orden
 
-        let orderToReplace = req.body
+        // Actualizar la orden en la base de datos
+        const response = await orderModel.updateOne(
+            { _id: oid },
+            {
+                $set: {
+                    estado: orderToReplace.estado,
+                }
+            }
+        );
 
-        if (!orderToReplace.name || !orderToReplace.price || !orderToReplace.quantity ){
-            return res.status(400).send({ status: 'error', error: 'Faltan completar los campos requeridos!'})
+        if (response.matchedCount === 0) {
+            return res.status(404).send({ 
+                status: 'error', 
+                message: 'Orden no encontrada' 
+            });
         }
 
-        const response = await orderModel.updateOne({ _id: oid })
-        res.status(200).send({ status: 'success', message: 'Orden actualizada con exito!', data: response })
+        res.status(200).send({ 
+            status: 'success', 
+            message: 'Orden actualizada con éxito!', 
+            data: response 
+        });
     } catch (error) {
         console.error('Error en PutOrder:', error);
-        res.status(500).send('Error puting Order');
+        res.status(500).send('Error actualizando la orden');
     }
 }
 
