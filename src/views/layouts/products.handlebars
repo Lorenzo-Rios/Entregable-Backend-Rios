@@ -109,7 +109,7 @@
             })
 .catch(error => {
     console.error('Error:', error);
-    alert('Error: ' + error.message);  // Aquí manejarás el error con el mensaje que ahora es más claro
+    alert('Error: no tienes permisos!, o no estas logeado!');  // Aquí manejarás el error con el mensaje que ahora es más claro
 });
 }
 
@@ -136,7 +136,7 @@
             })
             .catch(error => {
                 console.error('Error al eliminar el producto:', error);
-                alert('Error:' + error.message);
+                alert('Error: no tienes permisos!, o no estas logeado!');
             });
         }
 
@@ -181,7 +181,7 @@
             })
             .catch(error => {
                 console.error('Error al actualizar el producto:', error);
-                alert('Error al actualizar el producto: ' + error.message);
+                alert('Error al actualizar el producto: no tienes permisos!, o no estas logeado!');
             });
         }
     </script>

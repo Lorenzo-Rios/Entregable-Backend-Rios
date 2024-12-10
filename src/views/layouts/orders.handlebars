@@ -103,7 +103,7 @@
             })
             .catch(error => {
                 console.error('Error al eliminar la orden', error);
-                alert('Error al eliminar la orden');
+                alert('No tienes permisos para esta accion.');
             });
         }
 
@@ -140,7 +140,7 @@
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('No se pudo actualizar la orden.');
+            alert('No tienes permiso para esta accion.');
         });
 }   
     </script>
