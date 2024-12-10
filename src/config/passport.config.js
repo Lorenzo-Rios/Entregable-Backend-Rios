@@ -11,25 +11,33 @@ const userService = new UserManagerMongo()
 
 const initializePassport = () => {
 
-    const cookieExtractor = req => {
-        let token = null
-
-        if (req && req.cookies) {
-            token = req.cookies['token']
+    const cookieExtractor = (req) => {
+        let token = null;
+    
+        if (req && req.signedCookies) {
+            token = req.signedCookies['token']; 
         }
-        return token
-    }
+        return token;
+    };
 
-    passport.use('jwt', new JWTStrategy({
-        jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]),
-        secretOrKey: configObjet.private_key
-    }, async (jwt_payload, done) => {
-        try {
-            return done(null, jwt_payload)
-        } catch (error) {
-            return done(error)
-        }
-    }))
+    passport.use(
+        'jwt',
+        new JWTStrategy(
+            {
+                jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]),
+                secretOrKey: configObjet.private_key
+            },
+            async (jwt_payload, done) => {
+                try {
+                    // Si el token es válido, continúa
+                    return done(null, jwt_payload);
+                } catch (error) {
+                    // Manejo explícito de errores
+                    return done(null, false, { message: 'Token inválido o no proporcionado.' });
+                }
+            }
+        )
+    );
 
     passport.use('github', new GithubStrategy({
         clientID: 'Iv23lioB2bE5KgEVhzlZ',

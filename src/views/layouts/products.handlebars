@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Productos</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 </head>
 <body style="font-family: Arial, sans-serif; background-color: #f5f5f5; color: #333; padding: 20px;">
     <h1 style="text-align: center; color: #007bff;">Productos</h1>
@@ -98,24 +99,45 @@
         body: JSON.stringify({ quantity })
     })
     .then(response => {
-    if (!response.ok) {
-        return response.json().then(data => { throw new Error(data.error || 'Error desconocido'); });
-    }
-    return response.json();
-})
-.then(data => {
-                console.log('Producto agregado:', data);
-                alert('Producto agregado al carrito');
-            })
-.catch(error => {
-    console.error('Error:', error);
-    alert('Error: no tienes permisos!, o no estas logeado!');  // Aquí manejarás el error con el mensaje que ahora es más claro
-});
+        if (!response.ok) {
+            return response.json().then(data => { throw new Error(data.error || 'Error desconocido'); });
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Producto agregado:', data);
+        Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: 'Producto agregado al carrito',
+            confirmButtonColor: '#28a745'
+        });
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: error.message || 'No tienes permisos o no estas logeado!.',
+            confirmButtonColor: '#dc3545'
+        });
+    });
 }
 
         function deleteProduct(productId) {
-            const token = localStorage.getItem('token'); // Obtener el token almacenado en localStorage
+    const token = localStorage.getItem('token');
 
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: "Esta acción no se puede deshacer.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc3545',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
             fetch(`/api/product/${productId}`, { 
                 method: 'DELETE',
                 headers: {
@@ -131,14 +153,25 @@
             })
             .then(data => {
                 console.log('Producto eliminado:', data);
-                alert('Producto eliminado correctamente');
-                location.reload(); // Recargar la página para actualizar la lista de productos
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Eliminado',
+                    text: 'Producto eliminado correctamente',
+                    confirmButtonColor: '#28a745'
+                }).then(() => location.reload());
             })
             .catch(error => {
                 console.error('Error al eliminar el producto:', error);
-                alert('Error: no tienes permisos!, o no estas logeado!');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: error.message || 'No tienes permisos o no estas logeado!.',
+                    confirmButtonColor: '#dc3545'
+                });
             });
         }
+    });
+}
 
         function toggleUpdateForm(productId) {
             const form = document.getElementById(`update-form-${productId}`);
@@ -146,44 +179,57 @@
         }
 
     function updateProduct(productId) {
-            // Obtener los valores del formulario de actualización
-            const tittle = document.getElementById(`tittle-${productId}`).value;
-            const description = document.getElementById(`description-${productId}`).value;
-            const price = parseFloat(document.getElementById(`price-${productId}`).value);
-            const stock = parseInt(document.getElementById(`stock-${productId}`).value);
-            const code = document.getElementById(`code-${productId}`).value;  
+    const tittle = document.getElementById(`tittle-${productId}`).value;
+    const description = document.getElementById(`description-${productId}`).value;
+    const price = parseFloat(document.getElementById(`price-${productId}`).value);
+    const stock = parseInt(document.getElementById(`stock-${productId}`).value);
+    const code = document.getElementById(`code-${productId}`).value;
 
-            // Verificar que todos los campos estén completos
-            if (!tittle || !description || !price || !stock || !code) {
-                alert('Todos los campos son requeridos');
-                return;
-            }
+    if (!tittle || !description || !price || !stock || !code) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Campos incompletos',
+            text: 'Todos los campos son requeridos.',
+            confirmButtonColor: '#ffc107'
+        });
+        return;
+    }
 
-            const productData = { tittle, description, price, stock, code };
+    const productData = { tittle, description, price, stock, code };
 
-            fetch(`/api/product/${productId}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(productData)
-            })
-            .then(response => {
-                if (!response.ok) {
-                    return response.json().then(data => { throw new Error(data.error || 'Error desconocido'); });
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('Producto actualizado:', data);
-                alert('Producto actualizado con éxito');
-                location.reload();  // Recargar la página
-            })
-            .catch(error => {
-                console.error('Error al actualizar el producto:', error);
-                alert('Error al actualizar el producto: no tienes permisos!, o no estas logeado!');
-            });
+    fetch(`/api/product/${productId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(productData)
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(data => { throw new Error(data.error || 'Error desconocido'); });
         }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Producto actualizado:', data);
+        Swal.fire({
+            icon: 'success',
+            title: 'Actualizado',
+            text: 'Producto actualizado con éxito',
+            confirmButtonColor: '#28a745'
+        }).then(() => location.reload());
+    })
+    .catch(error => {
+        console.error('Error al actualizar el producto:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: error.message || 'No tienes permisos o no estas logeado!.',
+            confirmButtonColor: '#dc3545'
+        });
+    });
+}
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 </html>

@@ -72,7 +72,8 @@ async function PostLogin(req, res) {
 
         res.cookie('token', token, {
             maxAge: 1000 * 60 * 60 * 24, // 1 día
-            httpOnly: true
+            httpOnly: true,
+            signed: true 
         }).send({
             status: 'success',
             data: userFound,
@@ -88,7 +89,11 @@ async function GetFailLogin(req, res) {
 }
 
 async function GetData(req, res) {
-    res.send({dataUser: req.user, message: 'datos sensibles'})
+    res.status(200).send({
+        status: 'success',
+        dataUser: req.user,
+        message: 'Acceso autorizado. Aquí están los datos sensibles.'
+    });
 }
 
 async function GetLogout(req, res) {
