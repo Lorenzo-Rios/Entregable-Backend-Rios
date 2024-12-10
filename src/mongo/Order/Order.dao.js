@@ -1,4 +1,4 @@
-import { orderModel } from '../models/order.model.js';
+import { orderModel } from '../../models/order.model.js';
 
 class OrderDAO {
     async getOrders(filter = {}, options = {}) {

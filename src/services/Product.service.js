@@ -1,6 +1,13 @@
 import ProductRepository from '../repositories/Product.repository.js';
 
 const ProductService = {
+    getPaginatedProducts: async (filter, options) => {
+        const result = await ProductRepository.getPaginatedProducts(filter, options);
+        if (!result.docs || result.docs.length === 0) {
+            throw new Error('No se encontraron productos');
+        }
+        return result;
+    },
     getProducts: async (page, limit) => {
         const result = await ProductRepository.getProducts(page, limit);
         if (!result.docs || result.docs.length === 0) {
@@ -9,7 +16,6 @@ const ProductService = {
         return result;
     },
     createProduct: async (productData) => {
-        // Validar campos requeridos
         if (!productData.tittle || !productData.description || !productData.stock || !productData.price || !productData.code) {
             throw new Error('Faltan datos requeridos para crear un producto');
         }

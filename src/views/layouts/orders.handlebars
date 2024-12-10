@@ -19,7 +19,7 @@
             <strong>Productos:</strong>
         <ul>
             {{#each this.cart.products}}
-                <li>Nombre: {{this.product.tittle}} - Cantidad: {{this.quantity}} - Precio: ${{this.product.price}}</li>
+                <li>Id del producto: {{this.product}} - Cantidad: {{this.quantity}} - Precio: ${{this.price}}</li>
             {{/each}}
         </ul> <br>
             <strong>Estado de la orden:</strong><span id="metodo-pago-{{this._id}}">{{this.estado}}</span> <br>

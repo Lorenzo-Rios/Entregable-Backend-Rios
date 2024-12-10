@@ -1,60 +1,62 @@
-import CartDao from '../../../mongo/Cart.dao.js';
+import CartService from '../../../services/Cart.service.js';
 
 class CartController {
-    // Obtener un carrito por ID
     static async getCart(req, res) {
         try {
-            const { cid } = req.params
-            const cart = await CartDao.getCartById(cid);
+            const { cid } = req.params;
+            const cart = await CartService.getCartById(cid);
             res.send(cart);
         } catch (error) {
-            res.status(500).send({ error: error.message });
+            res.status(404).send({ error: error.message });
         }
     }
 
-    // Agregar un producto al carrito
     static async addProduct(req, res) {
         try {
             const { cid, pid } = req.params;
             const { quantity } = req.body;
 
-            const cart = await CartDao.addProductToCart(cid, pid, quantity);
+            if (!quantity || quantity <= 0) {
+                return res.status(400).send({ error: 'Quantity must be greater than 0' });
+            }
+
+            const cart = await CartService.addProductToCart(cid, pid, quantity);
             res.send(cart);
         } catch (error) {
             res.status(500).send({ error: error.message });
         }
     }
 
-    // Actualizar el carrito
     static async updateCart(req, res) {
         try {
-            const { cid } = req.params  // ID fijo del carrito
+            const { cid } = req.params;
             const { products } = req.body;
 
-            const cart = await CartDao.updateCart(cid, products);
+            if (!Array.isArray(products)) {
+                return res.status(400).send({ error: 'Products must be an array' });
+            }
+
+            const cart = await CartService.updateCart(cid, products);
             res.send(cart);
         } catch (error) {
             res.status(500).send({ error: error.message });
         }
     }
 
-    // Eliminar un producto del carrito
     static async removeProduct(req, res) {
         try {
             const { cid, pid } = req.params;
-
-            const cart = await CartDao.removeProductFromCart(cid, pid);
+            const cart = await CartService.removeProductFromCart(cid, pid);
             res.send(cart);
         } catch (error) {
             res.status(500).send({ error: error.message });
         }
     }
 
-    // Eliminar todos los productos del carrito
     static async clearCart(req, res) {
         try {
-            const { cid } = req.params
-            const cart = await CartDao.clearCart(cid);
+            const { cid } = req.params;
+            const cart = await CartService.clearCart(cid);
             res.send(cart);
         } catch (error) {
             res.status(500).send({ error: error.message });
@@ -67,10 +69,10 @@ class CartController {
             const { quantity } = req.body;
 
             if (!quantity || quantity <= 0) {
-                return res.status(400).send({ error: 'Quantity must be a positive number' });
+                return res.status(400).send({ error: 'Quantity must be greater than 0' });
             }
 
-            const cart = await CartDao.updateProductQuantity(cid, pid, quantity);
+            const cart = await CartService.updateProductQuantity(cid, pid, quantity);
             res.send(cart);
         } catch (error) {
             res.status(500).send({ error: error.message });

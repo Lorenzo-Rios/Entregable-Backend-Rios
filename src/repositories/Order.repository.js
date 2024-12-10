@@ -1,4 +1,4 @@
-import { orderDAO } from '../mongo/Order.dao.js';
+import { orderDAO } from '../mongo/Order/Order.dao.js';
 
 class OrderRepository {
     constructor(dao) {
@@ -23,6 +23,10 @@ class OrderRepository {
 
     async removeOrder(orderId) {
         return await this.dao.deleteOrder(orderId);
+    }
+
+    async getPaginatedOrders(filter, options) {
+        return await this.dao.getOrders(filter, options); // Ajustado para pasar opciones correctamente
     }
 }
 

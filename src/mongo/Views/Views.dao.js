@@ -1,6 +1,6 @@
-import { productModel } from '../models/product.model.js';
-import { cartModel } from '../models/cart.model.js';
-import { orderModel } from '../models/order.model.js';
+import { productModel } from '../../models/product.model.js';
+import { cartModel } from '../../models/cart.model.js';
+import { orderModel } from '../../models/order.model.js';
 
 class ViewDAO {
     async getCartById(cartId) {

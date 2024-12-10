@@ -52,6 +52,14 @@ class OrderService {
     async deleteOrder(orderId) {
         return await orderRepository.removeOrder(orderId);
     }
+
+    async getPaginatedOrders  (filter, options) {
+        const result = await orderRepository.getPaginatedOrders(filter, options);
+        if (!result.docs || result.docs.length === 0) {
+            throw new Error('No se encontraron ordenes');
+        }
+        return result;
+    }
 }
 
 export const orderService = new OrderService();

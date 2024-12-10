@@ -1,9 +1,9 @@
-import { productModel } from '../models/product.model.js';
+import { productModel } from '../../models/product.model.js';
 
 const ProductDAO = {
-    // Métodos existentes...
-    getProducts: async (options) => {
-        return productModel.paginate({}, options);
+    // Métodos
+    getProducts: async (options, filter = {}) => {
+        return productModel.paginate(filter, options);
     },
     createProduct: async (productData) => {
         return productModel.create(productData);
@@ -14,7 +14,6 @@ const ProductDAO = {
     deleteProductById: async (productId) => {
         return productModel.findByIdAndDelete(productId);
     },
-    // Nuevo método
     getProductById: async (productId) => {
         return productModel.findById(productId);
     },
