@@ -17,6 +17,13 @@ const ProductDAO = {
     getProductById: async (productId) => {
         return productModel.findById(productId);
     },
+    updateProductStock: async (productId, newStock) => {
+        return await productModel.findByIdAndUpdate(
+            productId,
+            { stock: newStock },
+            { new: true }
+        );
+    }
 };
 
 export default ProductDAO;

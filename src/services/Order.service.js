@@ -1,5 +1,6 @@
 import { orderRepository } from '../repositories/Order.repository.js';
 import { cartModel } from '../models/cart.model.js';
+import  productRepository  from '../repositories/Product.repository.js';
 
 class OrderService {
     async getOrders(page = 1, limit = 10) {
@@ -13,20 +14,40 @@ class OrderService {
             throw new Error('Cart is empty or not found');
         }
 
-        const total = cart.products.reduce(
-            (total, item) => total + item.product.price * item.quantity,
-            0
-        );
+        const productsToPurchase = [];
+        let total = 0;
+
+        for (const item of cart.products) {
+            const product = await productRepository.findProductById(item.product._id);
+
+            if (!product) {
+                throw new Error(`Product with ID ${item.product._id} not found`);
+            }
+
+            if (product.stock >= item.quantity) {
+                productsToPurchase.push({
+                    product: product._id,
+                    price: product.price,
+                    quantity: item.quantity,
+                });
+                total += product.price * item.quantity;
+
+                // Actualizar el stock
+                await productRepository.updateProductStock(product._id, product.stock - item.quantity);
+            } else {
+                console.warn(`Insufficient stock for product ${product.tittle}`);
+            }
+        }
+
+        if (productsToPurchase.length === 0) {
+            throw new Error('No products available to purchase');
+        }
 
         const orderData = {
             user,
             metodoDePago,
             cart: {
-                products: cart.products.map(item => ({
-                    product: item.product._id,
-                    price: item.product.price,
-                    quantity: item.quantity,
-                })),
+                products: productsToPurchase,
                 total,
             },
             estado: 'Pendiente',

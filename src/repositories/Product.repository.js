@@ -32,6 +32,14 @@ const ProductRepository = {
     getPaginatedProducts: async (filter, options) => {
         return await ProductDAO.getProducts({ ...options, lean: true });
     },
+
+    findProductById: async(productId) => {
+        return await ProductDAO.getProductById(productId);
+    },
+
+    updateProductStock: async (productId, newStock) => {
+        return await ProductDAO.updateProductStock(productId, newStock);
+    }
 };
 
 export default ProductRepository;

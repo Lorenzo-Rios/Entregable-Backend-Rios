@@ -49,7 +49,7 @@
         const cartId = '66f7728452336cfd1dc02875'
         const cartProducts = document.getElementById('cartProducts');
         function removeFromCart(productId) {
-            Swal.fire({
+    Swal.fire({
         title: '¿Estás seguro?',
         text: "Esta acción no se puede deshacer.",
         icon: 'warning',
@@ -83,33 +83,46 @@
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: error.message || 'No tienes permisos o no estas logeado!.',
+                    text: error.message || 'Ocurrió un problema al eliminar el producto.',
                     confirmButtonColor: '#dc3545'
                 });
             });
         }
     });
-        }
-        function placeOrder() {
-            const nombre = document.getElementById('nombre').value
-            const direccion = document.getElementById('direccion').value
-            const telefono = document.getElementById('telefono').value
-            const metodoDePago = document.getElementById('metodoDePago').value
-            fetch('/api/order', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ 
-                    cartId,
-                    user: {
-                        nombre,
-                        direccion,
-                        telefono,
-                    },
-                    metodoDePago
-                })
-            }).then(response => {
+}
+
+function placeOrder() {
+    const nombre = document.getElementById('nombre').value;
+    const direccion = document.getElementById('direccion').value;
+    const telefono = document.getElementById('telefono').value;
+    const metodoDePago = document.getElementById('metodoDePago').value;
+
+    if (!nombre || !direccion || !telefono) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Campos incompletos',
+            text: 'Por favor completa todos los campos antes de realizar el pedido.',
+            confirmButtonColor: '#dc3545'
+        });
+        return;
+    }
+
+    fetch('/api/order', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ 
+            cartId,
+            user: {
+                nombre,
+                direccion,
+                telefono,
+            },
+            metodoDePago
+        })
+    })
+    .then(response => {
         if (!response.ok) {
             return response.json().then(data => { throw new Error(data.error || 'Error desconocido'); });
         }
@@ -129,11 +142,11 @@
         Swal.fire({
             icon: 'error',
             title: 'Error',
-            text: error.message || 'No tienes permisos o no estas logeado!.',
+            text: error.message || 'Ocurrió un problema al realizar la orden.',
             confirmButtonColor: '#dc3545'
         });
     });
-        }
+}
     </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
