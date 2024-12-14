@@ -1,8 +1,6 @@
-import UserService from '../../../services/User.service.js';
+import { userService } from '../../../services/User.service.js';
 import { createHash, isValidPassword } from '../../../utils/bcrypt.js';
 import { generateToken } from '../../../utils/jsonwebtoken.js';
-
-const userService = new UserService();
 
 async function GetGithub(req, res) {
 

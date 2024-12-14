@@ -1,21 +1,27 @@
-import { userRepository } from '../repositories/user.repository.js';
+import { UserManagerMongo } from "../mongo/User/userManager.mongo.js";
+
+const userManager = new UserManagerMongo();
 
 class UserService {
     async getAllUsers() {
-        return await userRepository.getAll();
+        return await userManager.getAllUsers();
     }
 
     async createUser(userData) {
-        return await userRepository.create(userData);
+        return await userManager.createUser(userData);
     }
 
     async updateUser(uid, userData) {
-        return await userRepository.update(uid, userData);
+        return await userManager.updateUser(uid, userData);
     }
 
     async deleteUser(uid) {
-        return await userRepository.delete(uid);
+        return await userManager.deleteUser(uid);
+    }
+
+    async getUser(filter) {
+        return await userManager.getUser(filter);
     }
 }
 
-export default UserService; // Exportas la clase, no la instancia
+export const userService = new UserService();
