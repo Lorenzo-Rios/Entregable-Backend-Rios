@@ -1,7 +1,7 @@
 import passport from 'passport'
 import GithubStrategy from 'passport-github2'
 import jwt from 'passport-jwt'
-import { UserManagerMongo } from '../manager/Mongo/userManager.mongo.js'
+import { UserManagerMongo } from '../mongo/User/userManager.mongo.js'
 import { createHash } from '../utils/bcrypt.js'
 import { configObjet } from '../server/connection.db.js'
 

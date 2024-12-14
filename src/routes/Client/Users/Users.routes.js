@@ -1,13 +1,13 @@
-import { Router } from 'express'
-import { GetUser, PostUser, PutUser, DeleteUser } from '../../../controllers/Client/User/User.controller.js'
-import { passportCall } from '../../../passport/passportCall.js'
-import { authorization } from '../../../middleware/authorization.middleware.js'
+import { RouterClass } from '../utils/RouterClass.js';
+import { GetUser, PostUser, PutUser, DeleteUser } from '../controllers/user.controller.js';
 
-const router = Router()
+class UserRoute extends RouterClass {
+    init() {
+        this.get('/', ['user'], GetUser);
+        this.post('/', ['admin'], PostUser);
+        this.put('/:uid', ['admin'], PutUser);
+        this.delete('/:uid', ['admin'], DeleteUser);
+    }
+}
 
-router.get('/', passportCall('jwt'), authorization('admin'), GetUser)
-router.post('/', PostUser)
-router.put('/:uid', PutUser)
-router.delete('/:uid', DeleteUser)
-
-export default router
+export { UserRoute };
