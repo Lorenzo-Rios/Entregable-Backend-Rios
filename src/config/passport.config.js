@@ -1,13 +1,13 @@
 import passport from 'passport'
 import GithubStrategy from 'passport-github2'
 import jwt from 'passport-jwt'
-import { UserManagerMongo } from '../mongo/User/userManager.mongo.js'
+import { userService } from '../services/User.service.js'
 import { createHash } from '../utils/bcrypt.js'
 import { configObjet } from '../server/connection.db.js'
 
 const JWTStrategy = jwt.Strategy
 const ExtractJWT = jwt.ExtractJwt
-const userService = new UserManagerMongo()
+
 
 const initializePassport = () => {
 

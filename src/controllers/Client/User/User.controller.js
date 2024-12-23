@@ -1,3 +1,4 @@
+import { UserDto } from '../../../dto/users.dto.js';
 import { userService } from '../services/user.service.js';
 
 async function GetUser(req, res) {
@@ -13,7 +14,8 @@ async function GetUser(req, res) {
 async function PostUser(req, res) {
     try {
         const userData = req.body;
-        const newUser = await userService.createUser(userData);
+        const userDto = new UserDto(userData)
+        const newUser = await userService.createUser(userDto);
         res.sendSuccess(newUser);
     } catch (error) {
         console.error('Error en PostUser:', error);
