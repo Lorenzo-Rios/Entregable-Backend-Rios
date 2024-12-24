@@ -85,17 +85,13 @@ export default class Server {
             return JSON.stringify(context);
         });
     
-        // Configuración de Handlebars
-        this.app.engine('handlebars', engine({
-            layoutsDir: path.join(__dirname, '../views/layouts'),
-            runtimeOptions: {
-                allowProtoPropertiesByDefault: true
-            }
+        this.app.engine('.handlebars', engine({ 
+            extname: '.handlebars', 
+            defaultLayout: 'main' 
         }));
-        
-        // Establecer el motor de vistas
-        this.app.set('view engine', 'handlebars');
-        this.app.set('views', path.join(__dirname, '../views/layouts'));
+        this.app.set('view engine', '.handlebars');
+    
+        this.app.set('views', path.resolve('src/views'));
     }
 
     initializeSocketIo() {

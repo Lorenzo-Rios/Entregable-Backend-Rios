@@ -48,9 +48,9 @@ async function renderRealTimeProducts(req, res) {
     }
 }
 
-async function renderMain(req, res) {
+async function renderHome(req, res) {
     res.render(
-        'main'
+        'home'
     )
 }
 
@@ -88,7 +88,7 @@ export {
     renderCart,
     renderRealTimeProducts,
     renderChat,
-    renderMain,
+    renderHome,
     renderChangePass,
     renderLogin,
     renderRegister

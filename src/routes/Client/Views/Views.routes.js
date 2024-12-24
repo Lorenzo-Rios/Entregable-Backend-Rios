@@ -1,11 +1,11 @@
 import { Router } from 'express'
-import { renderMain, renderChat, renderRealTimeProducts, renderCart, renderProducts , renderRegister, renderLogin, renderChangePass, renderOrder } from '../../../controllers/Client/View/View.controller.js'
+import { renderHome, renderChat, renderRealTimeProducts, renderCart, renderProducts , renderRegister, renderLogin, renderChangePass, renderOrder } from '../../../controllers/Client/View/View.controller.js'
 import { passportCall } from '../../../passport/passportCall.js'
 import { authorization } from '../../../middleware/authorization.middleware.js'
 
 const router = Router()
 
-router.get('/', renderMain)
+router.get('/', renderHome)
 router.get('/chat', passportCall('jwt'), authorization('user'), renderChat)
 router.get('/realtimeproducts', passportCall('jwt'), authorization('admin'), renderRealTimeProducts)
 router.get('/cart', passportCall('jwt'), authorization('user'), renderCart)
