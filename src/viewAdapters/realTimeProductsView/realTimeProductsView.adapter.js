@@ -1,4 +1,4 @@
-import  ProductService  from '../../services/Product.service.js';
+import  ProductService  from '../../repositories/Product.repository.js';
 
 export const realTimeProductsViewAdapter = {
     async getRealTimeProducts() {

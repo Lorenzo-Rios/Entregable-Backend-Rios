@@ -1,21 +1,25 @@
-<h1>Productos en Tiempo Real</h1>
+<h1 style="text-align: center; color: #333; font-size: 2.5rem; margin-bottom: 1.5rem;">Productos en Tiempo Real</h1>
 
-<form id="productForm">
-    <label for="tittle">Inserte Producto</label><br>
-    <input type="text" id="tittle" name="tittle" placeholder="Título del producto" required> <br>
+<!-- Contenedor para centrar el formulario -->
+<div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+    <form id="productForm" style="background-color: #ffffff; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); width: 300px; margin-bottom: 2rem; display: flex; flex-direction: column; align-items: center;">
+        <label for="tittle" style="font-size: 1.2rem; margin-bottom: 0.5rem;">Inserte Producto</label><br>
+        
+        <input type="text" id="tittle" name="tittle" placeholder="Título del producto" required style="padding: 0.8rem; margin-bottom: 1rem; width: 100%; border: 1px solid #ccc; border-radius: 5px; font-size: 1rem;">
+        
+        <input type="text" id="description" name="description" placeholder="Descripción del producto" style="padding: 0.8rem; margin-bottom: 1rem; width: 100%; border: 1px solid #ccc; border-radius: 5px; font-size: 1rem;">
+        
+        <input type="text" id="code" name="code" placeholder="Código único del producto" required style="padding: 0.8rem; margin-bottom: 1rem; width: 100%; border: 1px solid #ccc; border-radius: 5px; font-size: 1rem;">
+        
+        <input type="number" id="price" name="price" placeholder="Precio del producto" required style="padding: 0.8rem; margin-bottom: 1rem; width: 100%; border: 1px solid #ccc; border-radius: 5px; font-size: 1rem;">
+        
+        <input type="number" id="stock" name="stock" placeholder="Cantidad disponible" required style="padding: 0.8rem; margin-bottom: 1.5rem; width: 100%; border: 1px solid #ccc; border-radius: 5px; font-size: 1rem;">
+        
+        <button type="submit" style="padding: 0.8rem 1.5rem; background-color: #4CAF50; color: white; border: none; border-radius: 5px; font-size: 1rem; cursor: pointer;">Agregar Producto</button>
+    </form>
+</div>
 
-    <input type="text" id="description" name="description" placeholder="Descripción del producto"><br>
-
-    <input type="text" id="code" name="code" placeholder="Código único del producto" required><br>
-
-    <input type="number" id="price" name="price" placeholder="Precio del producto" required><br>
-
-    <input type="number" id="stock" name="stock" placeholder="Cantidad disponible" required><br>
-
-    <button type="submit">Agregar Producto</button>
-</form>
-
-<ul id="productsList">
+<ul id="productsList" style="list-style-type: none; padding: 0; max-width: 500px; margin: 0 auto;">
     <!-- Aquí se renderizarán los productos en tiempo real -->
 </ul>
 
@@ -59,10 +63,22 @@
         products.forEach((product) => {
             const li = document.createElement('li');
             li.textContent = `${product.tittle} - $${product.price} - Stock disponible: ${product.stock} - Código: ${product.code}`;
+            li.style.padding = '10px';
+            li.style.marginBottom = '1rem';
+            li.style.backgroundColor = '#f9f9f9';
+            li.style.borderRadius = '5px';
+            li.style.border = '1px solid #ddd';
 
             // Botón para eliminar producto
             const deleteButton = document.createElement('button');
             deleteButton.textContent = 'Eliminar';
+            deleteButton.style.marginLeft = '1rem';
+            deleteButton.style.padding = '0.5rem 1rem';
+            deleteButton.style.backgroundColor = '#f44336';
+            deleteButton.style.color = 'white';
+            deleteButton.style.border = 'none';
+            deleteButton.style.borderRadius = '5px';
+            deleteButton.style.cursor = 'pointer';
             deleteButton.onclick = async () => {
                 try {
                     const response = await fetch(`/api/product/${product._id}`, {

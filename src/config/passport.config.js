@@ -1,7 +1,7 @@
 import passport from 'passport'
 import GithubStrategy from 'passport-github2'
 import jwt from 'passport-jwt'
-import { userService } from '../services/User.service.js'
+import { userRepository } from '../repositories/User.repository.js'
 import { createHash } from '../utils/bcrypt.js'
 import { configObjet } from '../server/connection.db.js'
 
@@ -47,7 +47,7 @@ const initializePassport = () => {
         try {
             console.log(profile)
 
-            let user = await userService.getUser({ email: profile._json.email })
+            let user = await userRepository.getUser({ email: profile._json.email })
 
             if(!user){
                 let newUser = {

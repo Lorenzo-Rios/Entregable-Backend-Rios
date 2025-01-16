@@ -6,7 +6,7 @@ async function GetProduct(req, res) {
         const pageNumber = parseInt(page, 10);
         const limitNumber = parseInt(limit, 10);
 
-        const result = await ProductRepository.getProducts(pageNumber, limitNumber);
+        const result = await ProductRepository.getPaginatedProducts({}, { page: pageNumber, limit: limitNumber });
 
         if (!result.docs || result.docs.length === 0) {
             return res.status(404).send({
@@ -65,10 +65,10 @@ async function PutProduct(req, res) {
 
         const updatedProduct = await ProductRepository.updateProduct(pid, productToReplace);
 
-        res.status(200).send({ 
-            status: 'success', 
-            message: 'Producto actualizado con éxito!', 
-            data: updatedProduct 
+        res.status(200).send({
+            status: 'success',
+            message: 'Producto actualizado con éxito!',
+            data: updatedProduct
         });
     } catch (error) {
         console.error('Error en PutProduct:', error.message);

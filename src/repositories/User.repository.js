@@ -1,20 +1,26 @@
-import { userModel } from '../models/user.model.js';
+import { UserDAO } from '../mongo/User/User.dao.js'; 
+
+const userManager = new UserDAO();  
 
 class UserRepository {
     async getAll() {
-        return await userModel.find();
+        return await userManager.getAllUsers();
     }
 
     async create(userData) {
-        return await userModel.create(userData);
+        return await userManager.createUser(userData);
     }
 
     async update(uid, userData) {
-        return await userModel.updateOne({ _id: uid }, userData);
+        return await userManager.updateUser(uid, userData);
     }
 
     async delete(uid) {
-        return await userModel.deleteOne({ _id: uid });
+        return await userManager.deleteUser(uid);
+    }
+
+    async getUser(filter) {
+        return await userManager.getUser(filter);
     }
 }
 

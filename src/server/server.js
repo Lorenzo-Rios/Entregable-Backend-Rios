@@ -21,6 +21,7 @@ import ViewRoute from '../routes/Client/Views/Views.routes.js'
 import OrderRoute from '../routes/Client/Orders/Orders.routes.js'
 import PruebaRoute from '../routes/Client/Pruebas/Pruebas.routes.js'
 import SessionRoute from '../routes/Client/Sessions/Sessions.routes.js'
+import TicketRoute from '../routes/Client/Tickets/Tickets.routes.js'
 import { UserRoute } from '../routes/Client/UserClass/UserClass.routes.js'
 
 /* DB */
@@ -38,7 +39,8 @@ export default class Server {
             cart: '/api/cart',
             order: '/api/order',
             prueba: '/api/prueba',
-            session: '/api/session'
+            session: '/api/session',
+            ticket: '/api/ticket'
         }
 
         this.app.set('io', this.io);
@@ -87,8 +89,11 @@ export default class Server {
     
         this.app.engine('.handlebars', engine({ 
             extname: '.handlebars', 
-            defaultLayout: 'main' 
-        }));
+            defaultLayout: 'main',
+            runtimeOptions: {
+            allowProtoPropertiesByDefault: true
+            }
+        }))
         this.app.set('view engine', '.handlebars');
     
         this.app.set('views', path.resolve('src/views'));
@@ -110,6 +115,7 @@ export default class Server {
     router () {
         const userRoute = new UserRoute()
         this.app.use('/', ViewRoute);
+        this.app.use(this.apiPaht.ticket, TicketRoute)
         this.app.use(this.apiPaht.prueba, PruebaRoute);
         this.app.use(this.apiPaht.session, SessionRoute);
         this.app.use(this.apiPaht.product, ProductRoute);

@@ -1,8 +1,8 @@
-import { orderService } from '../../services/Order.service.js';
+import { orderRepository } from '../../repositories/Order.repository.js';
 
 class OrderViewAdapter {
     async getPaginatedOrders(page, limit) {
-        const orders = await orderService.getPaginatedOrders({}, { page, limit });
+        const orders = await orderRepository.getPaginatedOrders({}, { page, limit });
         return {
             orders: orders.docs,
             totalPages: orders.totalPages,

@@ -1,4 +1,4 @@
-import { userService } from '../../../services/User.service.js';
+import { userRepository } from '../../../repositories/User.repository.js';
 import { createHash, isValidPassword } from '../../../utils/bcrypt.js';
 import { generateToken } from '../../../utils/jsonwebtoken.js';
 
@@ -18,7 +18,7 @@ async function PostRegister(req, res) {
         return res.send('Nombre de usuario y email obligatorios!').status(400)
     }
 
-    const userFound = await userService.getUser( {email} )
+    const userFound = await userRepository.getUser( {email} )
 
     if (userFound) {
         return res.status(401).send({status: 'error', error: 'El usuario ya existe'})
@@ -34,7 +34,7 @@ async function PostRegister(req, res) {
             phone
         }
     
-        const response = await userService.createUser( newUser )
+        const response = await userRepository.create( newUser )
 
         res.redirect('/login')
 
@@ -51,7 +51,7 @@ async function GetFailRegister(req, res) {
 async function PostLogin(req, res) {
     const { user_name, password } = req.body;
 
-    const userFound = await userService.getUser({ user_name });
+    const userFound = await userRepository.getUser({ user_name });
 
     if (!userFound) {
         return res.status(400).send({ status: 'error', message: 'El usuario no existe' });
@@ -108,7 +108,7 @@ async function PostChangePass(req, res) {
         return res.status(400).send({ status: 'error', message: 'El usuario y la nueva contraseña son requeridos.' });
     }
 
-    const userFound = await userService.getUser({ user_name });
+    const userFound = await userRepository.getUser({ user_name });
 
     if (!userFound) {
         return res.status(400).send({ status: 'error', error: 'El usuario no existe!' });
@@ -118,9 +118,8 @@ async function PostChangePass(req, res) {
         // Hashear la nueva contraseña
         const passwordHashed = createHash(newPassword);
 
-        const result = await userService.updateUser(userFound._id, { password: passwordHashed });
+        const result = await userRepository.update(userFound._id, { password: passwordHashed });
 
-        // Verificar si se actualizó el documento
         if (result.modifiedCount === 0) {
             return res.status(400).send({ status: 'error', message: 'No se pudo actualizar la contraseña!' });
         }

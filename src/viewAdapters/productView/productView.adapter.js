@@ -1,4 +1,4 @@
-import productService from '../../services/Product.service.js';
+import productService from '../../repositories/Product.repository.js';
 
 class ProductViewAdapter {
     async getPaginatedProducts(page, limit) {

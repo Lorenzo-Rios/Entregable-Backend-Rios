@@ -1,4 +1,4 @@
-import CartService from '../../services/Cart.service.js';
+import CartService from '../../repositories/Cart.repository.js';
 
 class CartViewAdapter {
     async getCartView(cartId) {
