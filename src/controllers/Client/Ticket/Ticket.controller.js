@@ -1,5 +1,26 @@
 import { ticketRepository } from '../../../repositories/Ticket.repository.js';
 
+async function getTicketById(req, res) {
+    const ticketId = req.params;
+
+    try {
+        const ticket = await ticketRepository.GetTicketId(ticketId)
+
+        if (!ticket) {
+            return res.status(404).json({message: "ticket no encontrado"})
+        } 
+        
+        res.status(200).json({
+            message: 'success',
+            ticket: ticket
+        });
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({message: "error al obtener el ticket"})
+    }
+}
+
 async function createTicket(req, res) {
     const { cartId, user, metodoDePago } = req.body;
 
@@ -19,4 +40,4 @@ async function createTicket(req, res) {
     }
 }
 
-export { createTicket };
+export { createTicket, getTicketById };

@@ -1,7 +1,18 @@
-import { ticketModel } from '../models/ticket.model.js'; // Modelo de Ticket
-import { cartModel } from '../models/cart.model.js'; // Modelo de Carrito
+import { ticketModel } from '../models/ticket.model.js'; 
+import { cartModel } from '../models/cart.model.js'; 
 
 class TicketRepository {
+    async GetTicketId ({ ticketId }) {
+        try {
+            const ticket = await ticketModel.findById(ticketId);  
+    
+            return ticket;
+        } catch (error) {
+            console.error('Error al buscar el ticket:', error);
+            throw new Error('Error al buscar el ticket');
+        }
+    }
+
     async createTicket({ cartId, user, metodoDePago, orderId }) {
         // Recuperar los datos del carrito
         const cart = await cartModel.findById(cartId).populate('products.product');
@@ -10,7 +21,6 @@ class TicketRepository {
             throw new Error('El carrito está vacío o no encontrado');
         }
 
-        // Transformar los productos del carrito para el ticket
         const productsToPurchase = [];
         let total = 0;
 
@@ -29,9 +39,8 @@ class TicketRepository {
             total += product.price * item.quantity;
         }
 
-        // Crear el ticket con los datos del carrito
         const ticketData = {
-            orderId, // Vinculamos el ticket con la orden
+            orderId,
             createdAt: new Date(),
             user: {
                 nombre: user.nombre,

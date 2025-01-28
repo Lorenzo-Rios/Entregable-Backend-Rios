@@ -45,6 +45,8 @@
         Ordenar
     </button>
 
+    <div class="ticketContainer" style="margin-top: 20px;"></div>
+
     <script>
     const cartId = '66f7728452336cfd1dc02875';
     const cartProducts = document.getElementById('cartProducts');
@@ -93,32 +95,32 @@
     }
 
     function placeOrder() {
-    const nombre = document.getElementById('nombre').value;
-    const direccion = document.getElementById('direccion').value;
-    const telefono = document.getElementById('telefono').value;
-    const metodoDePago = document.getElementById('metodoDePago').value;
+        const nombre = document.getElementById('nombre').value;
+        const direccion = document.getElementById('direccion').value;
+        const telefono = document.getElementById('telefono').value;
+        const metodoDePago = document.getElementById('metodoDePago').value;
 
-    if (!nombre || !direccion || !telefono || !metodoDePago) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Campos incompletos',
-            text: 'Por favor, completa todos los campos antes de proceder.',
-            confirmButtonColor: '#dc3545'
-        });
-        return; 
-    }
+        if (!nombre || !direccion || !telefono || !metodoDePago) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Campos incompletos',
+                text: 'Por favor, completa todos los campos antes de proceder.',
+                confirmButtonColor: '#dc3545'
+            });
+            return; 
+        }
 
-    fetch('/api/order', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            cartId,
-            user: { nombre, direccion, telefono },
-            metodoDePago
+        fetch('/api/order', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                cartId,
+                user: { nombre, direccion, telefono },
+                metodoDePago
+            })
         })
-    })
         .then(response => {
             if (!response.ok) {
                 return response.json().then(data => { throw new Error(data.error || 'Error al crear la orden y el ticket'); });
@@ -127,12 +129,29 @@
         })
         .then(data => {
             console.log('Orden y ticket creados:', data);
+            
+            // Mostrar mensaje de éxito
             Swal.fire({
                 icon: 'success',
                 title: 'Pedido completado',
                 text: 'La orden y el ticket fueron generados correctamente.',
                 confirmButtonColor: '#28a745'
-            }).then(() => location.reload());
+            }).then(() => {
+                // Crear el botón para ver el ticket
+                const verTicketBtn = document.createElement('button');
+                verTicketBtn.textContent = 'Ver Ticket';
+                verTicketBtn.classList.add('btn', 'btn-primary');
+                verTicketBtn.onclick = function() {
+                    // Función para mostrar el ticket
+                    showTicket(data.ticket._id);
+                };
+
+                // Asegurarnos de que el contenedor existe en el DOM
+                const container = document.getElementById('ticketContainer');
+                if (container) {
+                    container.appendChild(verTicketBtn);
+                }
+            });
         })
         .catch(error => {
             console.error('Error:', error);
@@ -143,7 +162,36 @@
                 confirmButtonColor: '#dc3545'
             });
         });
-}
+    }
+
+    function showTicket(ticketId) {
+        fetch(`/api/ticket/${ticketId}`)
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(data => { throw new Error(data.error || 'Error al obtener el ticket'); });
+            }
+            return response.json();  // Espera un JSON
+        })
+        .then(ticketData => {
+            console.log('Ticket:', ticketData);
+            // Mostrar el ticket en el frontend
+            Swal.fire({
+                title: 'Ticket',
+                html: `<pre>${JSON.stringify(ticketData, null, 2)}</pre>`,
+                confirmButtonColor: '#28a745'
+            });
+        })
+        .catch(error => {
+            console.error('Error al obtener el ticket:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: error.message || 'Ocurrió un problema al obtener el ticket.',
+                confirmButtonColor: '#dc3545'
+            });
+        });
+    }
 </script>
+<div id="ticketContainer"></div>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
