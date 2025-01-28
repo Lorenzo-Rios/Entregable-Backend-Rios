@@ -4,16 +4,18 @@ async function createTicket(req, res) {
     const { cartId, user, metodoDePago } = req.body;
 
     try {
-        // Llamamos al repositorio para crear el ticket
-        const ticket = await ticketRepository.createTicket({ cartId, user, metodoDePago });
+        const newTicket = await ticketRepository.createTicket({
+            cartId,   // ID del carrito que se obtiene desde la creación de la orden
+            user,     // Datos del usuario
+            metodoDePago  // Método de pago
+        });
 
-        // Enviamos la respuesta al frontend con el ticket creado
         res.status(200).json({
-            message: 'Ticket creado con éxito!',
-            ticket
+            message: 'Ticket generado con éxito!',
+            ticket: newTicket
         });
     } catch (err) {
-        res.status(500).json({ message: 'Error al crear el ticket', error: err.message });
+        res.status(500).json({ message: 'Error al generar el ticket', error: err.message });
     }
 }
 

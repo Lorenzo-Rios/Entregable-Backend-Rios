@@ -1,53 +1,38 @@
-import { ticketModel } from '../models/ticket.model.js';  // Importa el modelo de Ticket
-import { cartModel } from '../models/cart.model.js';
-import  productRepository  from '../repositories/Product.repository.js';  // Si necesitas actualizar el stock
+import { ticketModel } from '../models/ticket.model.js'; // Modelo de Ticket
+import { cartModel } from '../models/cart.model.js'; // Modelo de Carrito
 
 class TicketRepository {
-    async getTickets(page = 1, limit = 10) {
-        return await ticketModel.paginate({}, { page, limit });
-    }
-
-    async createTicket({ cartId, user, metodoDePago }) {
-        const cart = await cartModel.findById(cartId).populate('products.product'); // Obtenemos el carrito con los productos
+    async createTicket({ cartId, user, metodoDePago, orderId }) {
+        // Recuperar los datos del carrito
+        const cart = await cartModel.findById(cartId).populate('products.product');
 
         if (!cart || cart.products.length === 0) {
-            throw new Error('Cart is empty or not found');
+            throw new Error('El carrito está vacío o no encontrado');
         }
 
+        // Transformar los productos del carrito para el ticket
         const productsToPurchase = [];
         let total = 0;
 
-        // Aquí recorremos los productos del carrito
         for (const item of cart.products) {
-            const product = await productRepository.findProductById(item.product._id);
-
+            const product = item.product;
             if (!product) {
-                throw new Error(`Product with ID ${item.product._id} not found`);
+                throw new Error(`Producto con ID ${item.product._id} no encontrado`);
             }
 
-            if (product.stock >= item.quantity) {
-                productsToPurchase.push({
-                    name: product.name,  // Asegúrate de que este campo se llama 'name' en tu producto
-                    price: product.price,
-                    quantity: item.quantity,
-                });
-                total += product.price * item.quantity;
+            productsToPurchase.push({
+                tittle: product.tittle,
+                price: product.price,
+                quantity: item.quantity,
+            });
 
-                // Actualizar el stock del producto
-                await productRepository.updateProductStock(product._id, product.stock - item.quantity);
-            } else {
-                console.warn(`Insufficient stock for product ${product.name}`);
-            }
+            total += product.price * item.quantity;
         }
 
-        if (productsToPurchase.length === 0) {
-            throw new Error('No products available to purchase');
-        }
-
-        // Crear los datos del ticket
+        // Crear el ticket con los datos del carrito
         const ticketData = {
-            orderId: cartId,  // Asociamos el ticket a la orden mediante el cartId
-            createdAt: new Date(),  // Asignamos la fecha de creación
+            orderId, // Vinculamos el ticket con la orden
+            createdAt: new Date(),
             user: {
                 nombre: user.nombre,
                 direccion: user.direccion,
@@ -55,15 +40,15 @@ class TicketRepository {
             },
             metodoDePago,
             cart: {
-                products: productsToPurchase,  // Productos comprados
-                total,  // Total de la compra
+                products: productsToPurchase, // Productos transformados
+                total,
             },
         };
 
-        // Guardar el ticket en la base de datos
+        // Crear el ticket en la base de datos
         const newTicket = await ticketModel.create(ticketData);
 
-        // Vaciar el carrito después de generar el ticket
+        // Vaciar el carrito después de crear el ticket
         cart.products = [];
         await cart.save();
 

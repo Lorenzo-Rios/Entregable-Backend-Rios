@@ -5,8 +5,7 @@ const ticketsCollection = 'tickets';
 const ticketSchema = new Schema({
     orderId: {
         type: Schema.Types.ObjectId,
-        ref: 'orders', // Referencia al modelo de órdenes
-        required: true,
+        ref: 'orders'
     },
     createdAt: {
         type: Date,
@@ -14,42 +13,36 @@ const ticketSchema = new Schema({
     },
     user: {
         nombre: {
-            type: String,
-            required: true,
+            type: String
         },
         direccion: {
-            type: String,
-            required: true,
+            type: String
         },
         telefono: {
-            type: Number,
-            required: true,
+            type: Number
         },
     },
     metodoDePago: {
         type: String,
-        required: true,
+        enum: ['Efectivo', 'Mercado pago']
     },
     cart: {
         products: [
             {
-                name: {
-                    type: String,
-                    required: true,
+                tittle: {
+                    type: String
                 },
                 price: {
-                    type: Number,
-                    required: true,
+                    type: Number
                 },
                 quantity: {
                     type: Number,
-                    required: true,
+                    default: 1
                 },
             },
         ],
         total: {
-            type: Number,
-            required: true,
+            type: Number
         },
     },
 });

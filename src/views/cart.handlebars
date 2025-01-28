@@ -93,129 +93,53 @@
     }
 
     function placeOrder() {
-        const nombre = document.getElementById('nombre').value;
-        const direccion = document.getElementById('direccion').value;
-        const telefono = document.getElementById('telefono').value;
-        const metodoDePago = document.getElementById('metodoDePago').value;
-
-        if (!nombre || !direccion || !telefono) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Campos incompletos',
-                text: 'Por favor completa todos los campos antes de realizar el pedido.',
-                confirmButtonColor: '#dc3545'
-            });
-            return;
-        }
-
-        fetch('/api/order', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ 
-                cartId,
-                user: {
-                    nombre,
-                    direccion,
-                    telefono,
-                },
-                metodoDePago
-            })
-        })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(data => { throw new Error(data.error || 'Error desconocido'); });
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Orden realizada:', data);
-            
-            // Una vez que la orden se haya creado, se crea el ticket
-            createTicket(data.order._id); // Asegúrate de que `data.order._id` es el `orderId` que usas para el ticket
-
-            Swal.fire({
-                icon: 'success',
-                title: 'Realizada',
-                text: 'Orden realizada con éxito || Verifica en ordenes',
-                confirmButtonColor: '#28a745'
-            }).then(() => location.reload());
-        })
-        .catch(error => {
-            console.error('Error al realizar la orden:', error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: error.message || 'Ocurrió un problema al realizar la orden.',
-                confirmButtonColor: '#dc3545'
-            });
-        });
-    }
-
-    function createTicket(orderId) {
     const nombre = document.getElementById('nombre').value;
     const direccion = document.getElementById('direccion').value;
     const telefono = document.getElementById('telefono').value;
     const metodoDePago = document.getElementById('metodoDePago').value;
 
-    // Obtener los productos del carrito real desde el servidor
-    fetch(`/api/cart/${cartId}`)
-        .then(response => response.json())
-        .then(cartData => {
-            // Agregar todos los datos necesarios para el ticket
-            const ticketData = {
-                orderId, 
-                user: {
-                    nombre,
-                    direccion,
-                    telefono,
-                    correo: document.getElementById('correo').value, // Si es necesario, agrega el correo
-                },
-                metodoDePago,
-                cart: {
-                    products: cartData.products.map(product => ({
-                        name: product.product.name, // Nombre del producto
-                        price: product.product.price,
-                        quantity: product.quantity
-                    })),
-                    total: cartData.total, // Total calculado en el backend
-                },
-                createdAt: new Date(), // Si necesitas agregar la fecha de creación
-            };
+    if (!nombre || !direccion || !telefono || !metodoDePago) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Campos incompletos',
+            text: 'Por favor, completa todos los campos antes de proceder.',
+            confirmButtonColor: '#dc3545'
+        });
+        return; 
+    }
 
-            fetch('/api/ticket', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(ticketData)
-            })
-            .then(response => {
-                if (!response.ok) {
-                    return response.json().then(data => { throw new Error(data.error || 'Error desconocido'); });
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('Ticket creado:', data);
-            })
-            .catch(error => {
-                console.error('Error al crear el ticket:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: error.message || 'Ocurrió un problema al crear el ticket.',
-                    confirmButtonColor: '#dc3545'
-                });
-            });
+    fetch('/api/order', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            cartId,
+            user: { nombre, direccion, telefono },
+            metodoDePago
+        })
+    })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(data => { throw new Error(data.error || 'Error al crear la orden y el ticket'); });
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Orden y ticket creados:', data);
+            Swal.fire({
+                icon: 'success',
+                title: 'Pedido completado',
+                text: 'La orden y el ticket fueron generados correctamente.',
+                confirmButtonColor: '#28a745'
+            }).then(() => location.reload());
         })
         .catch(error => {
-            console.error('Error al obtener el carrito:', error);
+            console.error('Error:', error);
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'Ocurrió un problema al obtener los productos del carrito.',
+                text: error.message || 'Ocurrió un problema al completar el pedido.',
                 confirmButtonColor: '#dc3545'
             });
         });

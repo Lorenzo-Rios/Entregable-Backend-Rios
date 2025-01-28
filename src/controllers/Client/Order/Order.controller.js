@@ -1,4 +1,5 @@
-import { orderRepository } from '../../../repositories/Order.repository.js';
+import { orderRepository } from '../../../repositories/Order.repository.js'
+import { ticketRepository } from '../../../repositories/Ticket.repository.js'
 
 async function GetOrder(req, res) {
     try {
@@ -14,18 +15,25 @@ async function PostOrder(req, res) {
     const { cartId, user, metodoDePago } = req.body;
 
     try {
-        // Creación de la orden
         const order = await orderRepository.createOrder({ cartId, user, metodoDePago });
 
-        // Enviar respuesta al frontend con la orden creada
+        const ticket = await ticketRepository.createTicket({
+            cartId,
+            user,
+            metodoDePago,
+            orderId: order._id // Vincula ticket con la orden
+        });
+
         res.status(200).json({
-            message: 'Orden generada con éxito!',
-            order
+            message: 'Orden y ticket generados con éxito!',
+            order,
+            ticket
         });
     } catch (err) {
-        res.status(500).json({ message: 'Error al generar la orden!', error: err.message });
+        res.status(500).json({ message: 'Error al generar la orden y el ticket', error: err.message });
     }
 }
+
 
 async function PutOrder(req, res) {
     const { oid } = req.params;
