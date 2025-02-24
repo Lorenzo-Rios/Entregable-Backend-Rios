@@ -1,6 +1,6 @@
 import CartDao from '../mongo/Cart/Cart.dao.js';
 
-const CartService = {
+const CartRepository = {
     getCartById: async (cartId) => {
         const cart = await CartDao.getCartById(cartId);
         if (!cart) {
@@ -34,4 +34,4 @@ const CartService = {
     },
 };
 
-export default CartService;
+export default CartRepository;
