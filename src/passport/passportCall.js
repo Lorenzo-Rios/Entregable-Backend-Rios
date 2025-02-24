@@ -7,7 +7,7 @@ const passportCall = (strategy) => {
 
             if (!user) {
                 // Si no hay token o es inválido
-                const message = info?.message || 'No estás autenticado. Por favor, inicia sesión.';
+                const message = 'No estás autenticado. Por favor, inicia sesión.';
                 return res.status(401).json({ error: message });
             }
 
