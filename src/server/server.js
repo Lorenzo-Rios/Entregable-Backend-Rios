@@ -22,7 +22,7 @@ import OrderRoute from '../routes/Client/Orders/Orders.routes.js'
 import PruebaRoute from '../routes/Client/Pruebas/Pruebas.routes.js'
 import SessionRoute from '../routes/Client/Sessions/Sessions.routes.js'
 import TicketRoute from '../routes/Client/Tickets/Tickets.routes.js'
-import { UserRoute } from '../routes/Client/UserClass/UserClass.routes.js'
+import { UserRoute } from '../routes/Client/Users/Users.routes.js'
 
 /* DB */
 import db, { configObjet } from './connection.db.js'
